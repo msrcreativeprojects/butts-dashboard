@@ -35,6 +35,13 @@
             <p id="percentage" class="stat-number">-</p>
             <p class="stat-label">OF SEATS<br />WERE FILLED.</p>
           </div>
+          <div class="stat-item">
+            <p id="shows-running" class="stat-number">-</p>
+            <p class="stat-label shows-label">
+              <span class="shows-heading">## SHOWS</span>
+              <span class="shows-running">RUNNING</span>
+            </p>
+          </div>
         </div>
       </section>
     </div>
@@ -135,8 +142,19 @@
             data.capacity.toLocaleString();
           document.getElementById("percentage").textContent =
             data.percentage + "%";
+
           document.getElementById("intro-text").innerHTML =
             `<span class="intro-muted">LAST WEEK THERE WERE</span><br><span class="intro-shows">${data.showCount.toLocaleString()} SHOWS</span> <span class="intro-muted">RUNNING</span>`;
+
+          document.getElementById("shows-running").textContent =
+            data.showCount.toLocaleString();
+
+          document.getElementById("intro-text").innerHTML =
+            `<span class="intro-faded">LAST WEEK THERE WERE</span><br>${data.showCount.toLocaleString()} SHOWS <span class="intro-faded">RUNNING</span>`;
+
+          document.getElementById("intro-text").textContent =
+            `LAST WEEK THERE WERE ${data.showCount.toLocaleString()} SHOWS RUNNING`;
+
           document.getElementById("week-ending").textContent =
             "Week ending: " + data.weekEnding;
           document.getElementById("last-updated").textContent =
@@ -179,8 +197,17 @@
           mockData.capacity.toLocaleString();
         document.getElementById("percentage").textContent =
           mockData.percentage + "%";
+
         document.getElementById("intro-text").innerHTML =
           `<span class="intro-muted">LAST WEEK THERE WERE</span><br><span class="intro-shows">${mockData.showCount.toLocaleString()} SHOWS</span> <span class="intro-muted">RUNNING</span>`;
+        document.getElementById("shows-running").textContent =
+          mockData.showCount.toLocaleString();
+
+        document.getElementById("intro-text").innerHTML =
+          `<span class="intro-faded">LAST WEEK THERE WERE</span><br>${mockData.showCount.toLocaleString()} SHOWS <span class="intro-faded">RUNNING</span>`;
+
+        document.getElementById("intro-text").textContent =
+          `LAST WEEK THERE WERE ${mockData.showCount.toLocaleString()} SHOWS RUNNING`;
         document.getElementById("week-ending").textContent =
           "Week ending: " + mockData.weekEnding;
         document.getElementById("last-updated").textContent =

@@ -47,7 +47,12 @@ body {
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.03em;
+  line-height: 1.1;
   margin-bottom: 60px;
+}
+
+.intro-faded {
+  opacity: 0.7;
 }
 
 .main-stats {
@@ -76,6 +81,9 @@ body {
 
 .intro-muted { opacity: 0.7; }
 .intro-shows { color: #fff; }
+.shows-label { line-height: 1; }
+.shows-heading { display:block; color:#fff; opacity:1; }
+.shows-running { display:block; }
 
 .comparison-section {
   background: var(--blue-dark);
