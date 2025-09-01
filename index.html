@@ -127,11 +127,11 @@
       }
 
       setupYearSelector() {
-        const select = document.getElementById("year-select");
-        select.addEventListener("change", (e) =>
-          this.loadHistoricalData(e.target.value)
-        );
-        this.loadHistoricalData(select.value);
+      const select = document.getElementById("year-select");
+      select.addEventListener("change", (e) =>
+        this.loadHistoricalData(e.target.value)
+      );
+      this.loadHistoricalData(select.value);
       }
 
       async loadHistoricalData(year) {
