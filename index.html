@@ -53,6 +53,25 @@
           <option value="2017">2017</option>
           <option value="2016">2016</option>
           <option value="2015">2015</option>
+          <option value="2014">2014</option>
+          <option value="2013">2013</option>
+          <option value="2012">2012</option>
+          <option value="2011">2011</option>
+          <option value="2010">2010</option>
+          <option value="2009">2009</option>
+          <option value="2008">2008</option>
+          <option value="2007">2007</option>
+          <option value="2006">2006</option>
+          <option value="2005">2005</option>
+          <option value="2004">2004</option>
+          <option value="2003">2003</option>
+          <option value="2002">2002</option>
+          <option value="2001">2001</option>
+          <option value="2000">2000</option>
+          <option value="1999">1999</option>
+          <option value="1998">1998</option>
+          <option value="1997">1997</option>
+          <option value="1996">1996</option>
         </select>
       </p>
 
@@ -195,23 +214,52 @@
 
       loadMockHistoricalData(year) {
         console.log("Loading mock historical data for year:", year);
-        // Generate realistic mock historical data
-        const baseAttendance = 200000;
-        const baseCapacity = 240000;
         
-        // Vary data based on year (pre-pandemic vs post-pandemic)
-        let multiplier = 1;
-        if (year < 2020) multiplier = 1.1; // Pre-pandemic was higher
-        if (year === 2020) multiplier = 0.3; // Pandemic year was much lower
-        if (year === 2021) multiplier = 0.6; // Recovery year
-        if (year === 2022) multiplier = 0.8; // More recovery
-        if (year === 2023) multiplier = 0.95; // Near normal
-        if (year === 2024) multiplier = 1.0; // Current year
+        // Generate more realistic and varied data based on Broadway trends
+        let baseAttendance, baseCapacity;
+        
+        // Base values with year-specific adjustments
+        if (year >= 2016 && year <= 2019) {
+          // Pre-pandemic era - gradual growth
+          baseAttendance = 215000 + (year - 2016) * 2000; // 215k to 221k
+          baseCapacity = 255000 + (year - 2016) * 1500; // 255k to 259.5k
+        } else if (year === 2020) {
+          // Pandemic year - very low
+          baseAttendance = 45000;
+          baseCapacity = 200000;
+        } else if (year === 2021) {
+          // Recovery year
+          baseAttendance = 85000;
+          baseCapacity = 180000;
+        } else if (year === 2022) {
+          // More recovery
+          baseAttendance = 165000;
+          baseCapacity = 235000;
+        } else if (year === 2023) {
+          // Near normal
+          baseAttendance = 195000;
+          baseCapacity = 248000;
+        } else if (year === 2024) {
+          // Current year
+          baseAttendance = 210000;
+          baseCapacity = 255000;
+        } else {
+          // Historical years (1996-2015) - gradual growth over time
+          const yearsSince1996 = year - 1996;
+          baseAttendance = 180000 + (yearsSince1996 * 1200); // 180k to 203k
+          baseCapacity = 220000 + (yearsSince1996 * 1000); // 220k to 239k
+        }
+        
+        // Add some realistic variation (±5%)
+        const variation = 0.95 + (Math.random() * 0.1); // 95% to 105%
+        const attendance = Math.round(baseAttendance * variation);
+        const capacity = Math.round(baseCapacity * variation);
+        const percentage = Math.round((attendance / capacity) * 100);
         
         const mockData = {
-          attendance: Math.round(baseAttendance * multiplier),
-          capacity: Math.round(baseCapacity * multiplier),
-          percentage: Math.round((baseAttendance / baseCapacity) * 100 * multiplier)
+          attendance: attendance,
+          capacity: capacity,
+          percentage: percentage
         };
 
         console.log("Mock data calculated:", mockData);
