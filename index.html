@@ -20,7 +20,7 @@
   <div id="dashboard" hidden>
     <div class="main-screen">
       <section class="data-section">
-        <p class="intro-text">LAST WEEK THERE WERE</p>
+        <p id="intro-text" class="intro-text"></p>
 
         <div class="main-stats">
           <div class="stat-item">
@@ -141,6 +141,8 @@
             data.percentage + "%";
           document.getElementById("shows-running").textContent =
             data.showCount.toLocaleString();
+          document.getElementById("intro-text").innerHTML =
+            `<span class="intro-faded">LAST WEEK THERE WERE</span><br>${data.showCount.toLocaleString()} SHOWS <span class="intro-faded">RUNNING</span>`;
           document.getElementById("week-ending").textContent =
             "Week ending: " + data.weekEnding;
           document.getElementById("last-updated").textContent =
@@ -185,6 +187,8 @@
           mockData.percentage + "%";
         document.getElementById("shows-running").textContent =
           mockData.showCount.toLocaleString();
+        document.getElementById("intro-text").innerHTML =
+          `<span class="intro-faded">LAST WEEK THERE WERE</span><br>${mockData.showCount.toLocaleString()} SHOWS <span class="intro-faded">RUNNING</span>`;
         document.getElementById("week-ending").textContent =
           "Week ending: " + mockData.weekEnding;
         document.getElementById("last-updated").textContent =
