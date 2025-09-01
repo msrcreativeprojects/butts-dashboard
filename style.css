@@ -1,0 +1,38 @@
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .data-section,
+  .comparison-section {
+    padding: 40px 20px;
+  }
+
+  .stat-item {
+    margin-bottom: 30px;
+  }
+
+  .historical-stat {
+    margin-bottom: 20px;
+  }
+
+  .year-selector {
+    margin-left: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .data-section,
+  .comparison-section {
+    padding: 30px 10px;
+  }
+
+  .stat-item {
+    margin-bottom: 20px;
+  }
+
+  .historical-stat {
+    margin-bottom: 15px;
+  }
+
+  .year-selector {
+    margin-left: 4px;
+  }
+}
