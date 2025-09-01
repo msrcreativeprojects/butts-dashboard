@@ -46,31 +46,33 @@ function parseBroadwayData(html) {
     let totalCapacity = 0;
     let showCount = 0;
 
-    // Parse the BroadwayWorld grosses table using the new structure
-    // Look for rows with data attributes
-    const rowRegex = /<div class="row"[^>]*data-attendee="([^"]*)"[^>]*data-capacity="([^"]*)"[^>]*>/g;
-    const attendanceCapacityRegex = /<span class="out">([^<]*)<\/span><span class="in">([^<]*)<\/span>/g;
-    
     console.log('Starting BroadwayWorld data parsing...');
+
+    // Parse the BroadwayWorld grosses table using the new structure
+    // Extract attendance from data attributes and capacity from HTML spans
+    const rowRegex = /<div class="row"[^>]*data-attendee="([^"]*)"[^>]*>/g;
     
     let match;
-    const rows = [];
+    const attendanceData = [];
     
-    // First, extract all rows with attendance data
+    // First, extract all attendance data from data attributes
     while ((match = rowRegex.exec(html)) !== null) {
       const attendance = parseInt(match[1].replace(/,/g, '')) || 0;
-      const capacityPercent = parseFloat(match[2]) || 0;
-      
-      if (attendance > 0 && capacityPercent > 0) {
-        rows.push({ attendance, capacityPercent });
+      if (attendance > 0) {
+        attendanceData.push(attendance);
       }
     }
     
-    // Now look for the actual capacity numbers in the HTML
+    console.log(`Found ${attendanceData.length} shows with attendance data`);
+    
+    // Now extract capacity data from the HTML spans
+    // Look for pattern: <span class="out">attendance</span><span class="in">capacity</span>
     const capacityMatches = html.match(/<span class="out">([^<]*)<\/span><span class="in">([^<]*)<\/span>/g) || [];
     
-    for (let i = 0; i < Math.min(rows.length, capacityMatches.length); i++) {
-      const capacityMatch = capacityMatches[i];
+    console.log(`Found ${capacityMatches.length} capacity matches`);
+    
+    // Process each capacity match to get attendance and capacity
+    for (const capacityMatch of capacityMatches) {
       const capacityMatchResult = /<span class="out">([^<]*)<\/span><span class="in">([^<]*)<\/span>/.exec(capacityMatch);
       
       if (capacityMatchResult) {
@@ -81,6 +83,7 @@ function parseBroadwayData(html) {
           totalAttendance += attendance;
           totalCapacity += capacity;
           showCount++;
+          console.log(`Show ${showCount}: ${attendance.toLocaleString()} attendance, ${capacity.toLocaleString()} capacity`);
         }
       }
     }
