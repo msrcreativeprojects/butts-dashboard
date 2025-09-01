@@ -35,6 +35,10 @@
             <p id="percentage" class="stat-number">-</p>
             <p class="stat-label">FILLED</p>
           </div>
+          <div class="stat-item">
+            <p id="shows-running" class="stat-number">-</p>
+            <p class="stat-label">SHOWS RUNNING</p>
+          </div>
         </div>
       </section>
     </div>
@@ -88,6 +92,10 @@
           <p id="historical-percentage" class="historical-number">-</p>
           <p class="historical-label">FILLED</p>
         </div>
+        <div class="historical-stat">
+          <p id="historical-shows-running" class="historical-number">-</p>
+          <p class="historical-label">SHOWS RUNNING</p>
+        </div>
       </div>
     </section>
 
@@ -131,6 +139,8 @@
             data.capacity.toLocaleString();
           document.getElementById("percentage").textContent =
             data.percentage + "%";
+          document.getElementById("shows-running").textContent =
+            data.showCount.toLocaleString();
           document.getElementById("week-ending").textContent =
             "Week ending: " + data.weekEnding;
           document.getElementById("last-updated").textContent =
@@ -150,6 +160,7 @@
           attendance: 217600,
           capacity: 256000,
           percentage: 85,
+          showCount: 34,
           weekEnding: new Date().toLocaleDateString('en-US', { 
             month: 'long', 
             day: 'numeric', 
@@ -172,6 +183,8 @@
           mockData.capacity.toLocaleString();
         document.getElementById("percentage").textContent =
           mockData.percentage + "%";
+        document.getElementById("shows-running").textContent =
+          mockData.showCount.toLocaleString();
         document.getElementById("week-ending").textContent =
           "Week ending: " + mockData.weekEnding;
         document.getElementById("last-updated").textContent =
@@ -205,6 +218,8 @@
             data.capacity.toLocaleString();
           document.getElementById("historical-percentage").textContent =
             data.percentage + "%";
+          document.getElementById("historical-shows-running").textContent =
+            data.showCount.toLocaleString();
         } catch (err) {
           // Fallback to mock historical data
           console.log("Historical API failed, using mock data:", err);
@@ -216,38 +231,45 @@
         console.log("Loading mock historical data for year:", year);
         
         // Generate more realistic and varied data based on Broadway trends
-        let baseAttendance, baseCapacity;
+        let baseAttendance, baseCapacity, baseShowCount;
         
         // Base values with year-specific adjustments
         if (year >= 2016 && year <= 2019) {
           // Pre-pandemic era - gradual growth
           baseAttendance = 215000 + (year - 2016) * 2000; // 215k to 221k
           baseCapacity = 255000 + (year - 2016) * 1500; // 255k to 259.5k
+          baseShowCount = 32 + (year - 2016); // 32 to 35
         } else if (year === 2020) {
           // Pandemic year - very low
           baseAttendance = 45000;
           baseCapacity = 200000;
+          baseShowCount = 5;
         } else if (year === 2021) {
           // Recovery year
           baseAttendance = 85000;
           baseCapacity = 180000;
+          baseShowCount = 15;
         } else if (year === 2022) {
           // More recovery
           baseAttendance = 165000;
           baseCapacity = 235000;
+          baseShowCount = 30;
         } else if (year === 2023) {
           // Near normal
           baseAttendance = 195000;
           baseCapacity = 248000;
+          baseShowCount = 32;
         } else if (year === 2024) {
           // Current year
           baseAttendance = 210000;
           baseCapacity = 255000;
+          baseShowCount = 34;
         } else {
           // Historical years (1996-2015) - gradual growth over time
           const yearsSince1996 = year - 1996;
           baseAttendance = 180000 + (yearsSince1996 * 1200); // 180k to 203k
           baseCapacity = 220000 + (yearsSince1996 * 1000); // 220k to 239k
+          baseShowCount = 25 + Math.floor(yearsSince1996 / 2); // 25 to ~33
         }
         
         // Add some realistic variation (±5%)
@@ -255,11 +277,13 @@
         const attendance = Math.round(baseAttendance * variation);
         const capacity = Math.round(baseCapacity * variation);
         const percentage = Math.round((attendance / capacity) * 100);
+        const showCount = Math.max(1, Math.round(baseShowCount * variation));
         
         const mockData = {
           attendance: attendance,
           capacity: capacity,
-          percentage: percentage
+          percentage: percentage,
+          showCount: showCount
         };
 
         console.log("Mock data calculated:", mockData);
@@ -270,6 +294,8 @@
           mockData.capacity.toLocaleString();
         document.getElementById("historical-percentage").textContent =
           mockData.percentage + "%";
+        document.getElementById("historical-shows-running").textContent =
+          mockData.showCount.toLocaleString();
         
         console.log("Historical data updated in DOM");
       }

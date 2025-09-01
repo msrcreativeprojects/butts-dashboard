@@ -56,7 +56,7 @@ body {
 }
 
 .stat-item {
-  margin-bottom: 60px;
+  margin-bottom: 50px;
 }
 
 .stat-number {
@@ -116,7 +116,7 @@ body {
 }
 
 .historical-stat {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .historical-number {
@@ -204,11 +204,11 @@ body {
   }
 
   .stat-item {
-    margin-bottom: 40px;
+    margin-bottom: 30px;
   }
 
   .historical-stat {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
 
   .year-selector {
