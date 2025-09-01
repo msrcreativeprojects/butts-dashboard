@@ -142,6 +142,10 @@
             data.capacity.toLocaleString();
           document.getElementById("percentage").textContent =
             data.percentage + "%";
+
+          document.getElementById("intro-text").innerHTML =
+            `<span class="intro-muted">LAST WEEK THERE WERE</span><br><span class="intro-shows">${data.showCount.toLocaleString()} SHOWS</span> <span class="intro-muted">RUNNING</span>`;
+
           document.getElementById("shows-running").textContent =
             data.showCount.toLocaleString();
 
@@ -193,6 +197,9 @@
           mockData.capacity.toLocaleString();
         document.getElementById("percentage").textContent =
           mockData.percentage + "%";
+
+        document.getElementById("intro-text").innerHTML =
+          `<span class="intro-muted">LAST WEEK THERE WERE</span><br><span class="intro-shows">${mockData.showCount.toLocaleString()} SHOWS</span> <span class="intro-muted">RUNNING</span>`;
         document.getElementById("shows-running").textContent =
           mockData.showCount.toLocaleString();
 
@@ -201,7 +208,6 @@
 
         document.getElementById("intro-text").textContent =
           `LAST WEEK THERE WERE ${mockData.showCount.toLocaleString()} SHOWS RUNNING`;
-main
         document.getElementById("week-ending").textContent =
           "Week ending: " + mockData.weekEnding;
         document.getElementById("last-updated").textContent =

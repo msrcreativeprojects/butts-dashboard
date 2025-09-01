@@ -79,6 +79,8 @@ body {
   opacity: 0.7;
 }
 
+.intro-muted { opacity: 0.7; }
+.intro-shows { color: #fff; }
 .shows-label { line-height: 1; }
 .shows-heading { display:block; color:#fff; opacity:1; }
 .shows-running { display:block; }
