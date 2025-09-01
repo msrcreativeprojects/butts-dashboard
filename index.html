@@ -6,7 +6,12 @@
     <title>BUTTS IN SEATS</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-        
+
+        :root {
+            --light-text: #e6f0ff;
+            --lighter-text: #d6e4ff;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -40,10 +45,10 @@
         .intro-text {
             font-size: clamp(2rem, 4vw, 4rem);
             font-weight: 900;
-            color: #fff;
+            color: var(--light-text);
             text-transform: uppercase;
             letter-spacing: -0.03em;
-            opacity: 0.7;
+            opacity: 1;
             margin-bottom: 60px;
         }
 
@@ -67,10 +72,10 @@
         .stat-label {
             font-size: clamp(2rem, 4vw, 4rem);
             font-weight: 900;
-            color: #fff;
+            color: var(--light-text);
             text-transform: uppercase;
             letter-spacing: -0.03em;
-            opacity: 0.7;
+            opacity: 1;
         }
 
         .comparison-section {
@@ -81,10 +86,10 @@
         .comparison-intro {
             font-size: clamp(1.5rem, 3vw, 3rem);
             font-weight: 900;
-            color: #fff;
+            color: var(--lighter-text);
             text-transform: uppercase;
             letter-spacing: -0.03em;
-            opacity: 0.7;
+            opacity: 1;
             margin-bottom: 60px;
         }
 
@@ -130,10 +135,10 @@
         .historical-label {
             font-size: clamp(1.2rem, 2.5vw, 2.5rem);
             font-weight: 900;
-            color: #fff;
+            color: var(--lighter-text);
             text-transform: uppercase;
             letter-spacing: -0.03em;
-            opacity: 0.6;
+            opacity: 1;
         }
 
         .metadata {
