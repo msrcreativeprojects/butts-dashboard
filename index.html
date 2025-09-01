@@ -3,203 +3,277 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Butts in Seats - Broadway Dashboard</title>
+    <title>BUTTS IN SEATS</title>
     <style>
-        body {
-            font-family: 'Georgia', serif;
-            background-color: #fefefe;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background: #0052cc;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .main-screen {
+            min-height: 100vh;
+            background: #0052cc;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            position: relative;
+        }
+
+        .data-section {
+            flex: 1;
+            padding: 80px 40px;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
-            min-height: 100vh;
-            color: #333;
         }
 
-        .container {
-            text-align: center;
-            max-width: 800px;
-            width: 100%;
-        }
-
-        h1 {
-            font-size: 2.5rem;
+        .main-stats {
             margin-bottom: 60px;
-            font-weight: normal;
-            color: #2c2c2c;
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            margin-bottom: 40px;
+        .stat-item {
+            margin-bottom: 80px;
         }
 
-        .stat-box {
-            padding: 40px 20px;
-        }
-
-        .big-number {
-            font-size: 4rem;
-            font-weight: bold;
-            color: #1a1a1a;
-            line-height: 1;
-            margin-bottom: 10px;
+        .stat-number {
+            font-size: clamp(6rem, 16vw, 16rem);
+            font-weight: 900;
+            line-height: 0.8;
+            color: #fff;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
         }
 
         .stat-label {
-            font-size: 1.2rem;
-            color: #666;
+            font-size: clamp(2rem, 4vw, 4rem);
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            opacity: 0.7;
+        }
+
+        .fill-percentage {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .fill-number {
+            font-size: clamp(4rem, 10vw, 10rem);
+            font-weight: 900;
+            line-height: 0.8;
+            color: #fff;
             margin-bottom: 20px;
+            letter-spacing: -0.02em;
         }
 
-        .percentage {
-            font-size: 5rem;
-            font-weight: bold;
-            color: #c41e3a;
-            line-height: 1;
-            margin-bottom: 10px;
-        }
-
-        .percentage-label {
-            font-size: 1.4rem;
-            color: #666;
+        .fill-label {
+            font-size: clamp(1.5rem, 3vw, 3rem);
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            opacity: 0.7;
         }
 
         .comparison-section {
-            margin-top: 50px;
-            padding: 30px;
-            background-color: #f8f8f8;
-            border-radius: 8px;
-            border: 1px solid #e8e8e8;
+            background: #003d99;
+            padding: 80px 40px;
         }
 
-        .year-selector {
-            margin-bottom: 25px;
-        }
-
-        .year-selector select {
-            font-size: 1.1rem;
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background-color: white;
-        }
-
-        .historical-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 20px;
-        }
-
-        .historical-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #666;
+        .comparison-header {
+            font-size: clamp(1.5rem, 3vw, 3rem);
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: -0.04em;
+            margin-bottom: 60px;
+            text-align: center;
             line-height: 1;
         }
 
-        .historical-label {
-            font-size: 1rem;
-            color: #888;
-            margin-top: 5px;
+        .year-selector {
+            display: inline-block;
+            margin: 0 16px;
         }
 
-        .change-indicators {
+        .year-selector select {
+            background: #fff;
+            color: #0052cc;
+            border: none;
+            padding: 16px 24px;
+            font-size: clamp(1.5rem, 3vw, 3rem);
+            font-weight: 900;
+            font-family: inherit;
+            text-transform: uppercase;
+            cursor: pointer;
+            letter-spacing: -0.04em;
+        }
+
+        .week-info {
+            color: #fff;
+            font-weight: 900;
+        }
+
+        .historical-data {
+            margin-top: 80px;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 20px;
+            gap: 80px;
         }
 
-        .change-stat {
+        .historical-stat {
+        }
+
+        .historical-number {
+            font-size: clamp(4rem, 10vw, 10rem);
+            font-weight: 900;
+            line-height: 0.75;
+            color: #fff;
+            margin-bottom: 16px;
+            letter-spacing: -0.06em;
+        }
+
+        .historical-label {
+            font-size: clamp(1.5rem, 3vw, 3rem);
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: -0.04em;
+            opacity: 0.6;
+        }
+
+        .historical-percentage {
+            margin-top: 60px;
             text-align: center;
-            padding: 10px;
         }
 
-        .change-number {
-            font-size: 1.2rem;
-            font-weight: bold;
+        .historical-percentage-number {
+            font-size: clamp(6rem, 14vw, 14rem);
+            font-weight: 900;
+            line-height: 0.75;
+            color: #fff;
+            margin-bottom: 20px;
+            letter-spacing: -0.06em;
         }
 
-        .change-up {
-            color: #27ae60;
-        }
-
-        .change-down {
-            color: #e74c3c;
+        .historical-percentage-label {
+            font-size: clamp(2rem, 4vw, 4rem);
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: -0.04em;
+            opacity: 0.6;
         }
 
         .metadata {
-            margin-top: 60px;
-            font-size: 0.9rem;
-            color: #888;
-            line-height: 1.6;
+            background: #001a66;
+            padding: 40px;
+            font-size: 1rem;
+            color: #fff;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        .metadata a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
         }
 
         .loading {
-            font-size: 1.5rem;
-            color: #666;
-            margin: 60px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0052cc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(2rem, 6vw, 6rem);
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: -0.06em;
+            text-align: center;
         }
 
         .error {
-            font-size: 1.2rem;
-            color: #c41e3a;
-            margin: 60px 0;
+            background: #fff;
+            color: #0052cc;
+            padding: 40px;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.04em;
         }
 
         @media (max-width: 768px) {
-            .stats-grid {
+            .header {
+                padding: 40px 20px 20px 20px;
+            }
+            
+            .data-section {
+                padding: 20px 20px 40px 20px;
+            }
+            
+            .historical-data {
                 grid-template-columns: 1fr;
-                gap: 40px;
+                gap: 60px;
             }
             
-            .big-number {
-                font-size: 3rem;
+            .comparison-section {
+                padding: 60px 20px;
             }
             
-            .percentage {
-                font-size: 4rem;
-            }
-            
-            h1 {
-                font-size: 2rem;
+            .stat-item {
+                margin-bottom: 60px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Butts in Seats</h1>
-        
-        <div id="loading" class="loading">Loading Broadway data...</div>
-        <div id="error" class="error" style="display: none;"></div>
-        
-        <div id="dashboard" style="display: none;">
-            <div class="stats-grid">
-                <div class="stat-box">
-                    <div id="attendance" class="big-number">-</div>
-                    <div class="stat-label">Total Attendance</div>
+    <div id="loading" class="loading">LOADING BROADWAY DATA...</div>
+    <div id="error" class="error" style="display: none;"></div>
+    
+    <div id="dashboard" style="display: none;">
+        <div class="main-screen">
+            <div class="data-section">
+                <div class="main-stats">
+                    <div class="stat-item">
+                        <div id="attendance" class="stat-number">-</div>
+                        <div class="stat-label">BUTTS IN</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div id="capacity" class="stat-number">-</div>
+                        <div class="stat-label">SEATS</div>
+                    </div>
                 </div>
-                <div class="stat-box">
-                    <div id="capacity" class="big-number">-</div>
-                    <div class="stat-label">Total Seats Offered</div>
+                
+                <div class="stat-item">
+                    <div id="percentage" class="stat-number">-</div>
+                    <div class="stat-label">FILLED</div>
                 </div>
             </div>
-            
-            <div class="stat-box">
-                <div id="percentage" class="percentage">-</div>
-                <div class="percentage-label">Filled</div>
-            </div>
+        </div>
 
-            <div class="comparison-section">
-                <div class="year-selector">
-                    <label for="year-select">Compare to same week in: </label>
+        <div class="comparison-section">
+            <div class="comparison-header">
+                COMPARE TO SAME WEEK IN 
+                <span class="year-selector">
                     <select id="year-select">
                         <option value="2024">2024</option>
                         <option value="2023">2023</option>
@@ -212,38 +286,31 @@
                         <option value="2016">2016</option>
                         <option value="2015">2015</option>
                     </select>
+                </span>
+                <span id="week-display" class="week-info">: WEEK 35</span>
+            </div>
+
+            <div class="historical-data">
+                <div class="historical-stat">
+                    <div id="historical-attendance" class="historical-number">-</div>
+                    <div class="historical-label">BUTTS</div>
                 </div>
-
-                <div id="historical-data">
-                    <div class="historical-grid">
-                        <div class="stat-box">
-                            <div id="historical-attendance" class="historical-number">-</div>
-                            <div class="historical-label">Attendance</div>
-                        </div>
-                        <div class="stat-box">
-                            <div id="historical-capacity" class="historical-number">-</div>
-                            <div class="historical-label">Seats Offered</div>
-                        </div>
-                    </div>
-
-                    <div class="change-indicators">
-                        <div class="change-stat">
-                            <div id="attendance-change" class="change-number">-</div>
-                            <div>Attendance Change</div>
-                        </div>
-                        <div class="change-stat">
-                            <div id="capacity-change" class="change-number">-</div>
-                            <div>Capacity Change</div>
-                        </div>
-                    </div>
+                <div class="historical-stat">
+                    <div id="historical-capacity" class="historical-number">-</div>
+                    <div class="historical-label">SEATS</div>
                 </div>
             </div>
-            
-            <div class="metadata">
-                <div id="week-ending">Week ending: -</div>
-                <div id="last-updated">Last updated: -</div>
-                <div>Data source: <a href="https://www.broadwayworld.com/grosses.cfm" target="_blank">BroadwayWorld</a></div>
+
+            <div class="historical-percentage">
+                <div id="historical-percentage" class="historical-percentage-number">-</div>
+                <div class="historical-percentage-label">FILLED</div>
             </div>
+        </div>
+
+        <div class="metadata">
+            <div id="week-ending">Week ending: -</div>
+            <div id="last-updated">Last updated: -</div>
+            <div>Data source: <a href="https://www.broadwayworld.com/grosses.cfm" target="_blank">BROADWAYWORLD</a></div>
         </div>
     </div>
 
@@ -256,10 +323,9 @@
             }
 
             async init() {
-                // Check if we need to fetch new data (cache for 24 hours)
                 const now = Date.now();
                 const cacheAge = now - this.lastFetch;
-                const cacheExpiry = 24 * 60 * 60 * 1000; // 24 hours
+                const cacheExpiry = 24 * 60 * 60 * 1000;
 
                 if (!this.data || cacheAge > cacheExpiry) {
                     await this.fetchData();
@@ -269,35 +335,42 @@
             }
 
             loadCachedData() {
-                const cached = localStorage.getItem('broadwayData');
-                return cached ? JSON.parse(cached) : null;
+                try {
+                    const cached = localStorage.getItem('broadwayData');
+                    return cached ? JSON.parse(cached) : null;
+                } catch (error) {
+                    return null;
+                }
             }
 
             saveData(data) {
-                localStorage.setItem('broadwayData', JSON.stringify({
-                    ...data,
-                    timestamp: Date.now()
-                }));
+                try {
+                    localStorage.setItem('broadwayData', JSON.stringify({
+                        ...data,
+                        timestamp: Date.now()
+                    }));
+                } catch (error) {
+                    console.log('Cache not available');
+                }
             }
 
             async fetchData() {
                 try {
-                    // Call our serverless function to get real Broadway data
                     const response = await fetch('/.netlify/functions/broadway-data');
                     
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                    if (response.ok) {
+                        const broadwayData = await response.json();
+                        this.data = broadwayData;
+                        this.saveData(broadwayData);
+                    } else {
+                        throw new Error('Function not available');
                     }
                     
-                    const broadwayData = await response.json();
-                    this.data = broadwayData;
-                    this.saveData(broadwayData);
                     this.displayData();
                     this.setupYearComparison();
                     
                 } catch (error) {
                     console.error('Error fetching data:', error);
-                    // Fallback to mock data if the function fails
                     const mockData = this.generateMockData();
                     this.data = mockData;
                     this.saveData(mockData);
@@ -306,115 +379,15 @@
                 }
             }
 
-            setupYearComparison() {
-                const yearSelect = document.getElementById('year-select');
-                yearSelect.addEventListener('change', (e) => {
-                    this.displayHistoricalComparison(e.target.value);
-                });
-                
-                // Load default comparison (2024)
-                this.displayHistoricalComparison('2024');
-            }
-
-            async displayHistoricalComparison(year) {
-                try {
-                    // Call our historical data function with the selected year
-                    const currentWeek = this.getCurrentWeekNumber();
-                    const response = await fetch(`/.netlify/functions/broadway-historical?year=${year}&week=${currentWeek}`);
-                    
-                    let historicalData;
-                    if (response.ok) {
-                        historicalData = await response.json();
-                    } else {
-                        // Fallback if historical function isn't available yet
-                        historicalData = this.getFallbackHistoricalData(year);
-                    }
-                    
-                    // Display historical numbers
-                    document.getElementById('historical-attendance').textContent = 
-                        historicalData.attendance.toLocaleString();
-                    document.getElementById('historical-capacity').textContent = 
-                        historicalData.capacity.toLocaleString();
-                    
-                    // Calculate and display changes
-                    if (this.data && this.data.attendance && this.data.capacity) {
-                        const attendanceChange = ((this.data.attendance - historicalData.attendance) / historicalData.attendance * 100);
-                        const capacityChange = ((this.data.capacity - historicalData.capacity) / historicalData.capacity * 100);
-                        
-                        const attendanceChangeEl = document.getElementById('attendance-change');
-                        const capacityChangeEl = document.getElementById('capacity-change');
-                        
-                        attendanceChangeEl.textContent = `${attendanceChange > 0 ? '+' : ''}${attendanceChange.toFixed(1)}%`;
-                        attendanceChangeEl.className = `change-number ${attendanceChange >= 0 ? 'change-up' : 'change-down'}`;
-                        
-                        capacityChangeEl.textContent = `${capacityChange > 0 ? '+' : ''}${capacityChange.toFixed(1)}%`;
-                        capacityChangeEl.className = `change-number ${capacityChange >= 0 ? 'change-up' : 'change-down'}`;
-                    } else {
-                        // If current data isn't loaded yet, show placeholders
-                        document.getElementById('attendance-change').textContent = '...';
-                        document.getElementById('capacity-change').textContent = '...';
-                    }
-                    
-                } catch (error) {
-                    console.error('Error displaying historical comparison:', error);
-                    // Show fallback data
-                    const historicalData = this.getFallbackHistoricalData(year);
-                    document.getElementById('historical-attendance').textContent = 
-                        historicalData.attendance.toLocaleString();
-                    document.getElementById('historical-capacity').textContent = 
-                        historicalData.capacity.toLocaleString();
-                    document.getElementById('attendance-change').textContent = '...';
-                    document.getElementById('capacity-change').textContent = '...';
-                }
-            }
-
-            getCurrentWeekNumber() {
-                const now = new Date();
-                const start = new Date(now.getFullYear(), 0, 1);
-                const days = Math.floor((now - start) / (24 * 60 * 60 * 1000));
-                return Math.ceil((days + start.getDay() + 1) / 7);
-            }
-
-            getFallbackHistoricalData(year) {
-                // Fallback data based on real Broadway trends for when historical function isn't available
-                const realBroadwayData = {
-                    '2024': { attendance: 210000, capacity: 255000 },
-                    '2023': { attendance: 195000, capacity: 248000 },
-                    '2022': { attendance: 165000, capacity: 235000 }, // COVID recovery
-                    '2021': { attendance: 85000, capacity: 180000 },  // Limited reopening
-                    '2020': { attendance: 45000, capacity: 200000 },  // Shutdown year
-                    '2019': { attendance: 225000, capacity: 265000 }, // Pre-COVID baseline
-                    '2018': { attendance: 220000, capacity: 260000 },
-                    '2017': { attendance: 215000, capacity: 255000 }, // Hamilton peak
-                    '2016': { attendance: 210000, capacity: 250000 }, // Hamilton breakthrough
-                    '2015': { attendance: 205000, capacity: 245000 }
-                };
-                
-                const data = realBroadwayData[year] || { attendance: 200000, capacity: 250000 };
-                return {
-                    attendance: data.attendance,
-                    capacity: data.capacity,
-                    year: year
-                };
-            }
-
-            async simulateAPICall() {
-                // Simulate network delay
-                await new Promise(resolve => setTimeout(resolve, 2000));
-            }
-
             generateMockData() {
-                // Based on typical Broadway numbers (30+ shows, ~40 theaters)
-                // These numbers are realistic for current Broadway
                 const shows = 32;
                 const avgCapacity = 1000;
                 const avgAttendance = 850;
                 
-                const totalCapacity = shows * avgCapacity * 8; // 8 shows per week
+                const totalCapacity = shows * avgCapacity * 8;
                 const totalAttendance = shows * avgAttendance * 8;
                 const fillPercentage = Math.round((totalAttendance / totalCapacity) * 100);
                 
-                // Get the most recent Sunday (Broadway week ends on Sunday)
                 const now = new Date();
                 const weekEnding = new Date(now);
                 const daysSinceWeekend = (now.getDay() + 7) % 7;
@@ -446,7 +419,6 @@
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
                 
-                // Format numbers with commas
                 document.getElementById('attendance').textContent = 
                     this.data.attendance.toLocaleString();
                 document.getElementById('capacity').textContent = 
@@ -459,6 +431,71 @@
                     `Last updated: ${this.data.lastUpdated}`;
             }
 
+            setupYearComparison() {
+                const yearSelect = document.getElementById('year-select');
+                yearSelect.addEventListener('change', (e) => {
+                    this.displayHistoricalComparison(e.target.value);
+                });
+                
+                this.displayHistoricalComparison('2024');
+            }
+
+            async displayHistoricalComparison(year) {
+                try {
+                    const currentWeek = this.getCurrentWeekNumber();
+                    document.getElementById('week-display').textContent = `: WEEK ${currentWeek}`;
+                    
+                    const response = await fetch(`/.netlify/functions/broadway-historical?year=${year}&week=${currentWeek}`);
+                    
+                    let historicalData;
+                    if (response.ok) {
+                        historicalData = await response.json();
+                    } else {
+                        historicalData = this.getFallbackHistoricalData(year);
+                    }
+                    
+                    document.getElementById('historical-attendance').textContent = 
+                        historicalData.attendance.toLocaleString();
+                    document.getElementById('historical-capacity').textContent = 
+                        historicalData.capacity.toLocaleString();
+                    
+                    const historicalPercentage = Math.round((historicalData.attendance / historicalData.capacity) * 100);
+                    document.getElementById('historical-percentage').textContent = historicalPercentage + '%';
+                    
+                } catch (error) {
+                    console.error('Error displaying historical comparison:', error);
+                }
+            }
+
+            getCurrentWeekNumber() {
+                const now = new Date();
+                const start = new Date(now.getFullYear(), 0, 1);
+                const days = Math.floor((now - start) / (24 * 60 * 60 * 1000));
+                return Math.ceil((days + start.getDay() + 1) / 7);
+            }
+
+            getFallbackHistoricalData(year) {
+                const realBroadwayData = {
+                    '2024': { attendance: 210000, capacity: 255000 },
+                    '2023': { attendance: 195000, capacity: 248000 },
+                    '2022': { attendance: 165000, capacity: 235000 },
+                    '2021': { attendance: 85000, capacity: 180000 },
+                    '2020': { attendance: 45000, capacity: 200000 },
+                    '2019': { attendance: 225000, capacity: 265000 },
+                    '2018': { attendance: 220000, capacity: 260000 },
+                    '2017': { attendance: 215000, capacity: 255000 },
+                    '2016': { attendance: 210000, capacity: 250000 },
+                    '2015': { attendance: 205000, capacity: 245000 }
+                };
+                
+                const data = realBroadwayData[year] || { attendance: 200000, capacity: 250000 };
+                return {
+                    attendance: data.attendance,
+                    capacity: data.capacity,
+                    year: year
+                };
+            }
+
             showError(message) {
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('error').textContent = message;
@@ -466,7 +503,6 @@
             }
         }
 
-        // Initialize dashboard when page loads
         document.addEventListener('DOMContentLoaded', () => {
             new BroadwayDashboard();
         });
