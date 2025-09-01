@@ -1,499 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BUTTS IN SEATS</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BUTTS IN SEATS</title>
 
-        body {
-            font-family: 'Inter', -apple-system, system-ui, sans-serif;
-            background: var(--bg-color);
-            color: var(--text-color);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .main-screen {
-            min-height: 100vh;
-            background: var(--bg-color);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .data-section {
-            flex: 1;
-            padding: 80px 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .intro-text {
-            font-size: clamp(2rem, 4vw, 4rem);
-            font-weight: 900;
-            color: var(--text-color);
-            text-transform: uppercase;
-            letter-spacing: -0.03em;
-            opacity: 0.7;
-            margin-bottom: 60px;
-        }
-
-        .main-stats {
-            margin-bottom: 60px;
-        }
-
-        .stat-item {
-            margin-bottom: 60px;
-        }
-
-        .stat-number {
-            font-size: clamp(6rem, 16vw, 16rem);
-            font-weight: 900;
-            line-height: 0.8;
-            color: var(--text-color);
-            margin-bottom: 16px;
-            letter-spacing: -0.03em;
-        }
-
-        .stat-label {
-            font-size: clamp(2rem, 4vw, 4rem);
-            font-weight: 900;
-            color: var(--text-color);
-            text-transform: uppercase;
-            letter-spacing: -0.03em;
-            opacity: 0.7;
-        }
-
-        .comparison-section {
-            background: var(--bg-alt);
-            padding: 80px 40px;
-        }
-
-        .comparison-intro {
-            font-size: clamp(1.5rem, 3vw, 3rem);
-            font-weight: 900;
-            color: var(--text-color);
-            text-transform: uppercase;
-            letter-spacing: -0.03em;
-            opacity: 0.7;
-            margin-bottom: 60px;
-        }
-
-        .year-selector {
-            margin-left: 20px;
-        }
-
-        .year-selector select {
-            background: var(--select-bg);
-            color: var(--accent-color);
-            border: none;
-            padding: 12px 40px 12px 16px;
-            font-size: clamp(1.5rem, 3vw, 3rem);
-            font-weight: 900;
-            font-family: inherit;
-            text-transform: uppercase;
-            cursor: pointer;
-            letter-spacing: -0.03em;
-            appearance: none;
-            background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23003d99" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            background-size: 12px;
-        }
-
-        .historical-stats {
-            margin-top: 0px;
-        }
-
-        .historical-stat {
-            margin-bottom: 40px;
-        }
-
-        .historical-number {
-            font-size: clamp(3rem, 8vw, 8rem);
-            font-weight: 900;
-            line-height: 0.8;
-            color: var(--text-color);
-            margin-bottom: 12px;
-            letter-spacing: -0.03em;
-        }
-
-        .historical-label {
-            font-size: clamp(1.2rem, 2.5vw, 2.5rem);
-            font-weight: 900;
-            color: var(--text-color);
-            text-transform: uppercase;
-            letter-spacing: -0.03em;
-            opacity: 0.6;
-        }
-
-        .metadata {
-            background: var(--bg-metadata);
-            padding: 40px;
-            font-size: 1rem;
-            color: var(--text-color);
-            text-align: center;
-            opacity: 0.8;
-        }
-
-        .metadata a {
-            color: var(--text-color);
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: clamp(2rem, 6vw, 6rem);
-            font-weight: 900;
-            color: var(--text-color);
-            text-transform: uppercase;
-            letter-spacing: -0.03em;
-            text-align: center;
-        }
-
-        .error {
-            background: var(--text-color);
-            color: var(--bg-color);
-            padding: 40px;
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: -0.03em;
-        }
-
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--text-color);
-            color: var(--bg-color);
-            border: none;
-            padding: 10px 16px;
-            cursor: pointer;
-            font-weight: 600;
-            border-radius: 4px;
-            z-index: 1000;
-        }
-
-        @media (max-width: 768px) {
-            .data-section {
-                padding: 60px 20px;
-            }
-            
-            .comparison-section {
-                padding: 60px 20px;
-            }
-            
-            .stat-item {
-                margin-bottom: 40px;
-            }
-
-            .historical-stat {
-                margin-bottom: 30px;
-            }
-
-            .year-selector {
-                margin-left: 12px;
-            }
-        }
-    </style>
+  <!-- Fonts & styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <button id="theme-toggle" class="theme-toggle">Toggle Theme</button>
-    <div id="loading" class="loading">LOADING BROADWAY DATA...</div>
-    <div id="error" class="error" style="display: none;"></div>
-    
-    <div id="dashboard" style="display: none;">
-        <div class="main-screen">
-            <div class="data-section">
-                <div class="intro-text">LAST WEEK THERE WERE</div>
-                
-                <div class="main-stats">
-                    <div class="stat-item">
-                        <div id="attendance" class="stat-number">-</div>
-                        <div class="stat-label">BUTTS IN</div>
-                    </div>
-                    
-                    <div class="stat-item">
-                        <div id="capacity" class="stat-number">-</div>
-                        <div class="stat-label">SEATS</div>
-                    </div>
+  <main class="main-screen">
+    <!-- Current-week data -->
+    <section class="data-section">
+      <h1 class="intro-text">Butts in Seats</h1>
 
-                    <div class="stat-item">
-                        <div id="percentage" class="stat-number">-</div>
-                        <div class="stat-label">FILLED</div>
-                    </div>
-                </div>
-            </div>
+      <p id="loading">Loading Broadway stats…</p>
+      <p id="error" role="alert" hidden></p>
+
+      <div id="dashboard" hidden class="main-stats">
+        <div class="stat-item">
+          <p id="attendance" class="stat-number">0</p>
+          <p class="stat-label">Attendance</p>
         </div>
-
-        <div class="comparison-section">
-            <div class="comparison-intro">
-                THIS WEEK IN 
-                <span class="year-selector">
-                    <select id="year-select">
-                        <option value="2024">2024</option>
-                        <option value="2023">2023</option>
-                        <option value="2022">2022</option>
-                        <option value="2021">2021</option>
-                        <option value="2020">2020</option>
-                        <option value="2019">2019</option>
-                        <option value="2018">2018</option>
-                        <option value="2017">2017</option>
-                        <option value="2016">2016</option>
-                        <option value="2015">2015</option>
-                    </select>
-                </span>
-            </div>
-
-            <div class="historical-stats">
-                <div class="historical-stat">
-                    <div id="historical-attendance" class="historical-number">-</div>
-                    <div class="historical-label">BUTTS IN</div>
-                </div>
-                
-                <div class="historical-stat">
-                    <div id="historical-capacity" class="historical-number">-</div>
-                    <div class="historical-label">SEATS</div>
-                </div>
-
-                <div class="historical-stat">
-                    <div id="historical-percentage" class="historical-number">-</div>
-                    <div class="historical-label">FILLED</div>
-                </div>
-            </div>
+        <div class="stat-item">
+          <p id="capacity" class="stat-number">0</p>
+          <p class="stat-label">Capacity</p>
         </div>
-
-        <div class="metadata">
-            <div id="week-ending">Week ending: -</div>
-            <div id="last-updated">Last updated: -</div>
-            <div>Data source: <a href="https://www.broadwayworld.com/grosses.cfm" target="_blank">BROADWAYWORLD</a></div>
+        <div class="stat-item">
+          <p id="percentage" class="stat-number">0%</p>
+          <p class="stat-label">Fill Rate</p>
         </div>
-    </div>
+      </div>
+    </section>
 
-    <script>
-        class BroadwayDashboard {
-            constructor() {
-                this.data = this.loadCachedData();
-                this.lastFetch = this.data ? this.data.timestamp : 0;
-                this.init();
-            }
+    <!-- Historical comparison -->
+    <section class="comparison-section">
+      <p class="comparison-intro">
+        Compare to previous years
+        <span class="year-selector">
+          <label for="year-select" class="sr-only">Select year</label>
+          <select id="year-select">
+            <option value="2024" selected>2024</option>
+            <option value="2023">2023</option>
+            <option value="2022">2022</option>
+            <option value="2021">2021</option>
+            <option value="2020">2020</option>
+            <option value="2019">2019</option>
+            <option value="2018">2018</option>
+            <option value="2017">2017</option>
+            <option value="2016">2016</option>
+            <option value="2015">2015</option>
+          </select>
+        </span>
+      </p>
 
-            async init() {
-                const now = Date.now();
-                const cacheAge = now - this.lastFetch;
-                const cacheExpiry = 24 * 60 * 60 * 1000;
+      <div class="historical-stats">
+        <div class="historical-stat">
+          <p id="historical-attendance" class="historical-number">0</p>
+          <p class="historical-label">Attendance</p>
+        </div>
+        <div class="historical-stat">
+          <p id="historical-capacity" class="historical-number">0</p>
+          <p class="historical-label">Capacity</p>
+        </div>
+        <div class="historical-stat">
+          <p id="historical-percentage" class="historical-number">0%</p>
+          <p class="historical-label">Fill Rate</p>
+        </div>
+      </div>
+    </section>
 
-                if (!this.data || cacheAge > cacheExpiry) {
-                    await this.fetchData();
-                } else {
-                    this.displayData();
-                }
-            }
+    <!-- Metadata & theme toggle -->
+    <footer class="metadata">
+      <p id="week-ending"></p>
+      <p id="last-updated"></p>
+      <button id="theme-toggle" aria-label="Toggle dark theme">🌓</button>
+    </footer>
+  </main>
 
-            loadCachedData() {
-                try {
-                    const cached = localStorage.getItem('broadwayData');
-                    return cached ? JSON.parse(cached) : null;
-                } catch (error) {
-                    return null;
-                }
-            }
+  <script>
+    class BroadwayDashboard {
+      constructor() {
+        this.init();
+      }
 
-            saveData(data) {
-                try {
-                    localStorage.setItem('broadwayData', JSON.stringify({
-                        ...data,
-                        timestamp: Date.now()
-                    }));
-                } catch (error) {
-                    console.log('Cache not available');
-                }
-            }
+      async init() {
+        await this.loadCurrentData();
+        this.setupYearSelector();
+        this.setupThemeToggle();
+      }
 
-            async fetchData() {
-                try {
-                    const response = await fetch('/.netlify/functions/broadway-data');
-                    
-                    if (response.ok) {
-                        const broadwayData = await response.json();
-                        this.data = broadwayData;
-                        this.saveData(broadwayData);
-                    } else {
-                        throw new Error('Function not available');
-                    }
-                    
-                    this.displayData();
-                    this.setupYearComparison();
-                    
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                    const mockData = this.generateMockData();
-                    this.data = mockData;
-                    this.saveData(mockData);
-                    this.displayData();
-                    this.setupYearComparison();
-                }
-            }
+      async loadCurrentData() {
+        try {
+          const res = await fetch("/.netlify/functions/broadway-data");
+          if (!res.ok) throw new Error("Network response was not ok");
+          const data = await res.json();
 
-            generateMockData() {
-                const shows = 32;
-                const avgCapacity = 1000;
-                const avgAttendance = 850;
-                
-                const totalCapacity = shows * avgCapacity * 8;
-                const totalAttendance = shows * avgAttendance * 8;
-                const fillPercentage = Math.round((totalAttendance / totalCapacity) * 100);
-                
-                const now = new Date();
-                const weekEnding = new Date(now);
-                const daysSinceWeekend = (now.getDay() + 7) % 7;
-                weekEnding.setDate(now.getDate() - daysSinceWeekend);
-                
-                return {
-                    attendance: totalAttendance,
-                    capacity: totalCapacity,
-                    percentage: fillPercentage,
-                    weekEnding: weekEnding.toLocaleDateString('en-US', { 
-                        month: 'long', 
-                        day: 'numeric', 
-                        year: 'numeric' 
-                    }),
-                    lastUpdated: new Date().toLocaleString('en-US', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    })
-                };
-            }
+          document.getElementById("attendance").textContent =
+            data.attendance.toLocaleString();
+          document.getElementById("capacity").textContent =
+            data.capacity.toLocaleString();
+          document.getElementById("percentage").textContent =
+            data.percentage + "%";
+          document.getElementById("week-ending").textContent =
+            "Week ending: " + data.weekEnding;
+          document.getElementById("last-updated").textContent =
+            "Last updated: " + data.lastUpdated;
 
-            displayData() {
-                if (!this.data) return;
-
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('dashboard').style.display = 'block';
-                
-                document.getElementById('attendance').textContent = 
-                    this.data.attendance.toLocaleString();
-                document.getElementById('capacity').textContent = 
-                    this.data.capacity.toLocaleString();
-                document.getElementById('percentage').textContent = 
-                    this.data.percentage + '%';
-                document.getElementById('week-ending').textContent = 
-                    `Week ending: ${this.data.weekEnding}`;
-                document.getElementById('last-updated').textContent = 
-                    `Last updated: ${this.data.lastUpdated}`;
-            }
-
-            setupYearComparison() {
-                const yearSelect = document.getElementById('year-select');
-                yearSelect.addEventListener('change', (e) => {
-                    this.displayHistoricalComparison(e.target.value);
-                });
-                
-                this.displayHistoricalComparison('2024');
-            }
-
-            async displayHistoricalComparison(year) {
-                try {
-                    const currentWeek = this.getCurrentWeekNumber();
-                    const response = await fetch(`/.netlify/functions/broadway-historical?year=${year}&week=${currentWeek}`);
-                    
-                    let historicalData;
-                    if (response.ok) {
-                        historicalData = await response.json();
-                    } else {
-                        historicalData = this.getFallbackHistoricalData(year);
-                    }
-                    
-                    document.getElementById('historical-attendance').textContent = 
-                        historicalData.attendance.toLocaleString();
-                    document.getElementById('historical-capacity').textContent = 
-                        historicalData.capacity.toLocaleString();
-                    
-                    const historicalPercentage = Math.round((historicalData.attendance / historicalData.capacity) * 100);
-                    document.getElementById('historical-percentage').textContent = historicalPercentage + '%';
-                    
-                } catch (error) {
-                    console.error('Error displaying historical comparison:', error);
-                }
-            }
-
-            getCurrentWeekNumber() {
-                const now = new Date();
-                const start = new Date(now.getFullYear(), 0, 1);
-                const days = Math.floor((now - start) / (24 * 60 * 60 * 1000));
-                return Math.ceil((days + start.getDay() + 1) / 7);
-            }
-
-            getFallbackHistoricalData(year) {
-                const realBroadwayData = {
-                    '2024': { attendance: 210000, capacity: 255000 },
-                    '2023': { attendance: 195000, capacity: 248000 },
-                    '2022': { attendance: 165000, capacity: 235000 },
-                    '2021': { attendance: 85000, capacity: 180000 },
-                    '2020': { attendance: 45000, capacity: 200000 },
-                    '2019': { attendance: 225000, capacity: 265000 },
-                    '2018': { attendance: 220000, capacity: 260000 },
-                    '2017': { attendance: 215000, capacity: 255000 },
-                    '2016': { attendance: 210000, capacity: 250000 },
-                    '2015': { attendance: 205000, capacity: 245000 }
-                };
-                
-                const data = realBroadwayData[year] || { attendance: 200000, capacity: 250000 };
-                return {
-                    attendance: data.attendance,
-                    capacity: data.capacity,
-                    year: year
-                };
-            }
-
-            showError(message) {
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('error').textContent = message;
-                document.getElementById('error').style.display = 'block';
-            }
+          document.getElementById("loading").hidden = true;
+          document.getElementById("dashboard").hidden = false;
+        } catch (err) {
+          this.showError("Failed to load Broadway data.");
         }
+      }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                document.documentElement.setAttribute('data-theme', savedTheme);
-            }
+      setupYearSelector() {
+        const select = document.getElementById("year-select");
+        select.addEventListener("change", (e) =>
+          this.loadHistoricalData(e.target.value)
+        );
+        this.loadHistoricalData(select.value);
+      }
 
-            const toggle = document.getElementById('theme-toggle');
-            toggle.addEventListener('click', () => {
-                const current = document.documentElement.getAttribute('data-theme');
-                const next = current === 'dark' ? 'light' : 'dark';
-                document.documentElement.setAttribute('data-theme', next);
-                localStorage.setItem('theme', next);
-            });
+      async loadHistoricalData(year) {
+        try {
+          const week = this.getCurrentWeekNumber();
+          const res = await fetch(
+            `/.netlify/functions/broadway-historical?year=${year}&week=${week}`
+          );
+          const data = await res.json();
 
-            new BroadwayDashboard();
+          document.getElementById("historical-attendance").textContent =
+            data.attendance.toLocaleString();
+          document.getElementById("historical-capacity").textContent =
+            data.capacity.toLocaleString();
+          document.getElementById("historical-percentage").textContent =
+            data.percentage + "%";
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      getCurrentWeekNumber() {
+        const now = new Date();
+        const start = new Date(now.getFullYear(), 0, 1);
+        const days = Math.floor((now - start) / 86400000);
+        return Math.ceil((days + start.getDay() + 1) / 7);
+      }
+
+      setupThemeToggle() {
+        const btn = document.getElementById("theme-toggle");
+        const root = document.documentElement;
+        const stored = localStorage.getItem("theme");
+        if (stored) root.setAttribute("data-theme", stored);
+
+        btn.addEventListener("click", () => {
+          const current = root.getAttribute("data-theme") === "dark"
+            ? "light"
+            : "dark";
+          root.setAttribute("data-theme", current);
+          localStorage.setItem("theme", current);
         });
-    </script>
+      }
+
+      showError(message) {
+        const err = document.getElementById("error");
+        err.textContent = message;
+        err.hidden = false;
+        document.getElementById("loading").hidden = true;
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      new BroadwayDashboard();
+    });
+  </script>
 </body>
 </html>
