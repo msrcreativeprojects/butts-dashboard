@@ -6,7 +6,15 @@
     <title>BUTTS IN SEATS</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-        
+
+        :root {
+            --primary-bg: #0052cc;
+            --secondary-bg: #003d99;
+            --tertiary-bg: #001a66;
+            --text-color: #fff;
+            --surface-bg: #fff;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,15 +23,15 @@
 
         body {
             font-family: 'Inter', -apple-system, system-ui, sans-serif;
-            background: #0052cc;
-            color: #fff;
+            background: var(--primary-bg);
+            color: var(--text-color);
             min-height: 100vh;
             overflow-x: hidden;
         }
 
         .main-screen {
             min-height: 100vh;
-            background: #0052cc;
+            background: var(--primary-bg);
             display: flex;
             flex-direction: column;
             position: relative;
@@ -40,7 +48,7 @@
         .intro-text {
             font-size: clamp(2rem, 4vw, 4rem);
             font-weight: 900;
-            color: #fff;
+            color: var(--text-color);
             text-transform: uppercase;
             letter-spacing: -0.03em;
             opacity: 0.7;
@@ -59,7 +67,7 @@
             font-size: clamp(6rem, 16vw, 16rem);
             font-weight: 900;
             line-height: 0.8;
-            color: #fff;
+            color: var(--text-color);
             margin-bottom: 16px;
             letter-spacing: -0.03em;
         }
@@ -67,21 +75,21 @@
         .stat-label {
             font-size: clamp(2rem, 4vw, 4rem);
             font-weight: 900;
-            color: #fff;
+            color: var(--text-color);
             text-transform: uppercase;
             letter-spacing: -0.03em;
             opacity: 0.7;
         }
 
         .comparison-section {
-            background: #003d99;
+            background: var(--secondary-bg);
             padding: 80px 40px;
         }
 
         .comparison-intro {
             font-size: clamp(1.5rem, 3vw, 3rem);
             font-weight: 900;
-            color: #fff;
+            color: var(--text-color);
             text-transform: uppercase;
             letter-spacing: -0.03em;
             opacity: 0.7;
@@ -93,8 +101,8 @@
         }
 
         .year-selector select {
-            background: #fff;
-            color: #003d99;
+            background: var(--surface-bg);
+            color: var(--secondary-bg);
             border: none;
             padding: 12px 40px 12px 16px;
             font-size: clamp(1.5rem, 3vw, 3rem);
@@ -104,7 +112,7 @@
             cursor: pointer;
             letter-spacing: -0.03em;
             appearance: none;
-            background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23003d99" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
+            background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'><path fill='currentColor' d='M2 0L0 2h4zm0 5L0 3h4z'/></svg>");
             background-repeat: no-repeat;
             background-position: right 16px center;
             background-size: 12px;
@@ -122,7 +130,7 @@
             font-size: clamp(3rem, 8vw, 8rem);
             font-weight: 900;
             line-height: 0.8;
-            color: #fff;
+            color: var(--text-color);
             margin-bottom: 12px;
             letter-spacing: -0.03em;
         }
@@ -130,23 +138,23 @@
         .historical-label {
             font-size: clamp(1.2rem, 2.5vw, 2.5rem);
             font-weight: 900;
-            color: #fff;
+            color: var(--text-color);
             text-transform: uppercase;
             letter-spacing: -0.03em;
             opacity: 0.6;
         }
 
         .metadata {
-            background: #001a66;
+            background: var(--tertiary-bg);
             padding: 40px;
             font-size: 1rem;
-            color: #fff;
+            color: var(--text-color);
             text-align: center;
             opacity: 0.8;
         }
 
         .metadata a {
-            color: #fff;
+            color: var(--text-color);
             text-decoration: none;
             font-weight: 700;
         }
@@ -157,21 +165,21 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #0052cc;
+            background: var(--primary-bg);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: clamp(2rem, 6vw, 6rem);
             font-weight: 900;
-            color: #fff;
+            color: var(--text-color);
             text-transform: uppercase;
             letter-spacing: -0.03em;
             text-align: center;
         }
 
         .error {
-            background: #fff;
-            color: #0052cc;
+            background: var(--surface-bg);
+            color: var(--primary-bg);
             padding: 40px;
             text-align: center;
             font-size: 2rem;
