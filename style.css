@@ -75,6 +75,10 @@ body {
   opacity: 0.7;
 }
 
+.shows-label { line-height: 1; }
+.shows-heading { display:block; color:#fff; opacity:1; }
+.shows-running { display:block; }
+
 .comparison-section {
   background: var(--blue-dark);
   padding: 80px 40px;
