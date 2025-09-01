@@ -37,12 +37,22 @@
             justify-content: center;
         }
 
+        .intro-text {
+            font-size: clamp(2rem, 4vw, 4rem);
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            opacity: 0.7;
+            margin-bottom: 60px;
+        }
+
         .main-stats {
             margin-bottom: 60px;
         }
 
         .stat-item {
-            margin-bottom: 80px;
+            margin-bottom: 60px;
         }
 
         .stat-number {
@@ -51,7 +61,7 @@
             line-height: 0.8;
             color: #fff;
             margin-bottom: 16px;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
         }
 
         .stat-label {
@@ -59,30 +69,7 @@
             font-weight: 900;
             color: #fff;
             text-transform: uppercase;
-            letter-spacing: -0.01em;
-            opacity: 0.7;
-        }
-
-        .fill-percentage {
-            margin-top: 40px;
-            text-align: center;
-        }
-
-        .fill-number {
-            font-size: clamp(4rem, 10vw, 10rem);
-            font-weight: 900;
-            line-height: 0.8;
-            color: #fff;
-            margin-bottom: 20px;
-            letter-spacing: -0.02em;
-        }
-
-        .fill-label {
-            font-size: clamp(1.5rem, 3vw, 3rem);
-            font-weight: 900;
-            color: #fff;
-            text-transform: uppercase;
-            letter-spacing: -0.01em;
+            letter-spacing: -0.03em;
             opacity: 0.7;
         }
 
@@ -91,88 +78,61 @@
             padding: 80px 40px;
         }
 
-        .comparison-header {
+        .comparison-intro {
             font-size: clamp(1.5rem, 3vw, 3rem);
             font-weight: 900;
             color: #fff;
             text-transform: uppercase;
-            letter-spacing: -0.04em;
+            letter-spacing: -0.03em;
+            opacity: 0.7;
             margin-bottom: 60px;
-            text-align: center;
-            line-height: 1;
         }
 
         .year-selector {
-            display: inline-block;
-            margin: 0 16px;
+            margin-left: 20px;
         }
 
         .year-selector select {
             background: #fff;
-            color: #0052cc;
+            color: #003d99;
             border: none;
-            padding: 16px 24px;
+            padding: 12px 40px 12px 16px;
             font-size: clamp(1.5rem, 3vw, 3rem);
             font-weight: 900;
             font-family: inherit;
             text-transform: uppercase;
             cursor: pointer;
-            letter-spacing: -0.04em;
+            letter-spacing: -0.03em;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23003d99" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 12px;
         }
 
-        .week-info {
-            color: #fff;
-            font-weight: 900;
-        }
-
-        .historical-data {
-            margin-top: 80px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
+        .historical-stats {
+            margin-top: 0px;
         }
 
         .historical-stat {
+            margin-bottom: 40px;
         }
 
         .historical-number {
-            font-size: clamp(4rem, 10vw, 10rem);
+            font-size: clamp(3rem, 8vw, 8rem);
             font-weight: 900;
-            line-height: 0.75;
+            line-height: 0.8;
             color: #fff;
-            margin-bottom: 16px;
-            letter-spacing: -0.06em;
+            margin-bottom: 12px;
+            letter-spacing: -0.03em;
         }
 
         .historical-label {
-            font-size: clamp(1.5rem, 3vw, 3rem);
+            font-size: clamp(1.2rem, 2.5vw, 2.5rem);
             font-weight: 900;
             color: #fff;
             text-transform: uppercase;
-            letter-spacing: -0.04em;
-            opacity: 0.6;
-        }
-
-        .historical-percentage {
-            margin-top: 60px;
-            text-align: center;
-        }
-
-        .historical-percentage-number {
-            font-size: clamp(6rem, 14vw, 14rem);
-            font-weight: 900;
-            line-height: 0.75;
-            color: #fff;
-            margin-bottom: 20px;
-            letter-spacing: -0.06em;
-        }
-
-        .historical-percentage-label {
-            font-size: clamp(2rem, 4vw, 4rem);
-            font-weight: 900;
-            color: #fff;
-            text-transform: uppercase;
-            letter-spacing: -0.04em;
+            letter-spacing: -0.03em;
             opacity: 0.6;
         }
 
@@ -205,7 +165,7 @@
             font-weight: 900;
             color: #fff;
             text-transform: uppercase;
-            letter-spacing: -0.06em;
+            letter-spacing: -0.03em;
             text-align: center;
         }
 
@@ -217,21 +177,12 @@
             font-size: 2rem;
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: -0.04em;
+            letter-spacing: -0.03em;
         }
 
         @media (max-width: 768px) {
-            .header {
-                padding: 40px 20px 20px 20px;
-            }
-            
             .data-section {
-                padding: 20px 20px 40px 20px;
-            }
-            
-            .historical-data {
-                grid-template-columns: 1fr;
-                gap: 60px;
+                padding: 60px 20px;
             }
             
             .comparison-section {
@@ -239,7 +190,15 @@
             }
             
             .stat-item {
-                margin-bottom: 60px;
+                margin-bottom: 40px;
+            }
+
+            .historical-stat {
+                margin-bottom: 30px;
+            }
+
+            .year-selector {
+                margin-left: 12px;
             }
         }
     </style>
@@ -251,6 +210,8 @@
     <div id="dashboard" style="display: none;">
         <div class="main-screen">
             <div class="data-section">
+                <div class="intro-text">LAST WEEK THERE WERE</div>
+                
                 <div class="main-stats">
                     <div class="stat-item">
                         <div id="attendance" class="stat-number">-</div>
@@ -261,18 +222,18 @@
                         <div id="capacity" class="stat-number">-</div>
                         <div class="stat-label">SEATS</div>
                     </div>
-                </div>
-                
-                <div class="stat-item">
-                    <div id="percentage" class="stat-number">-</div>
-                    <div class="stat-label">FILLED</div>
+
+                    <div class="stat-item">
+                        <div id="percentage" class="stat-number">-</div>
+                        <div class="stat-label">FILLED</div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="comparison-section">
-            <div class="comparison-header">
-                COMPARE TO SAME WEEK IN 
+            <div class="comparison-intro">
+                THIS WEEK IN 
                 <span class="year-selector">
                     <select id="year-select">
                         <option value="2024">2024</option>
@@ -287,23 +248,23 @@
                         <option value="2015">2015</option>
                     </select>
                 </span>
-                <span id="week-display" class="week-info">: WEEK 35</span>
             </div>
 
-            <div class="historical-data">
+            <div class="historical-stats">
                 <div class="historical-stat">
                     <div id="historical-attendance" class="historical-number">-</div>
-                    <div class="historical-label">BUTTS</div>
+                    <div class="historical-label">BUTTS IN</div>
                 </div>
+                
                 <div class="historical-stat">
                     <div id="historical-capacity" class="historical-number">-</div>
                     <div class="historical-label">SEATS</div>
                 </div>
-            </div>
 
-            <div class="historical-percentage">
-                <div id="historical-percentage" class="historical-percentage-number">-</div>
-                <div class="historical-percentage-label">FILLED</div>
+                <div class="historical-stat">
+                    <div id="historical-percentage" class="historical-number">-</div>
+                    <div class="historical-label">FILLED</div>
+                </div>
             </div>
         </div>
 
@@ -443,8 +404,6 @@
             async displayHistoricalComparison(year) {
                 try {
                     const currentWeek = this.getCurrentWeekNumber();
-                    document.getElementById('week-display').textContent = `: WEEK ${currentWeek}`;
-                    
                     const response = await fetch(`/.netlify/functions/broadway-historical?year=${year}&week=${currentWeek}`);
                     
                     let historicalData;
