@@ -46,45 +46,82 @@ function parseBroadwayData(html) {
     let totalCapacity = 0;
     let showCount = 0;
 
-    // Parse the BroadwayWorld grosses table
-    // Look for the specific pattern in their HTML structure
-    const tableRowRegex = /<tr[^>]*>.*?<\/tr>/gs;
-    const rows = html.match(tableRowRegex) || [];
+    // Parse the BroadwayWorld grosses table using the new structure
+    // Look for rows with data attributes
+    const rowRegex = /<div class="row"[^>]*data-attendee="([^"]*)"[^>]*data-capacity="([^"]*)"[^>]*>/g;
+    const attendanceCapacityRegex = /<span class="out">([^<]*)<\/span><span class="in">([^<]*)<\/span>/g;
     
-    // BroadwayWorld shows data in table rows with specific patterns
-    // Each row contains: Show name, gross, attendance, capacity, etc.
-    for (const row of rows) {
-      // Look for attendance/capacity patterns
-      // Format: attendance numbers followed by capacity numbers
-      const numberMatches = row.match(/(\d{1,3}(?:,\d{3})*)/g);
+    console.log('Starting BroadwayWorld data parsing...');
+    
+    let match;
+    const rows = [];
+    
+    // First, extract all rows with attendance data
+    while ((match = rowRegex.exec(html)) !== null) {
+      const attendance = parseInt(match[1].replace(/,/g, '')) || 0;
+      const capacityPercent = parseFloat(match[2]) || 0;
       
-      if (numberMatches && numberMatches.length >= 8) {
-        // BroadwayWorld format typically has attendance and capacity in specific positions
-        try {
-          const attendance = parseInt(numberMatches[4]?.replace(/,/g, '')) || 0;
-          const capacity = parseInt(numberMatches[5]?.replace(/,/g, '')) || 0;
-          
-          if (attendance > 0 && capacity > 0 && attendance <= capacity) {
-            totalAttendance += attendance;
-            totalCapacity += capacity;
-            showCount++;
+      if (attendance > 0 && capacityPercent > 0) {
+        rows.push({ attendance, capacityPercent });
+      }
+    }
+    
+    // Now look for the actual capacity numbers in the HTML
+    const capacityMatches = html.match(/<span class="out">([^<]*)<\/span><span class="in">([^<]*)<\/span>/g) || [];
+    
+    for (let i = 0; i < Math.min(rows.length, capacityMatches.length); i++) {
+      const capacityMatch = capacityMatches[i];
+      const capacityMatchResult = /<span class="out">([^<]*)<\/span><span class="in">([^<]*)<\/span>/.exec(capacityMatch);
+      
+      if (capacityMatchResult) {
+        const attendance = parseInt(capacityMatchResult[1].replace(/,/g, '')) || 0;
+        const capacity = parseInt(capacityMatchResult[2].replace(/,/g, '')) || 0;
+        
+        if (attendance > 0 && capacity > 0 && attendance <= capacity) {
+          totalAttendance += attendance;
+          totalCapacity += capacity;
+          showCount++;
+        }
+      }
+    }
+
+    // If the new parsing method didn't work, try the old method as fallback
+    if (showCount === 0) {
+      console.log('New parsing failed, trying old method');
+      const tableRowRegex = /<tr[^>]*>.*?<\/tr>/gs;
+      const oldRows = html.match(tableRowRegex) || [];
+      
+      for (const row of oldRows) {
+        const numberMatches = row.match(/(\d{1,3}(?:,\d{3})*)/g);
+        
+        if (numberMatches && numberMatches.length >= 8) {
+          try {
+            const attendance = parseInt(numberMatches[4]?.replace(/,/g, '')) || 0;
+            const capacity = parseInt(numberMatches[5]?.replace(/,/g, '')) || 0;
+            
+            if (attendance > 0 && capacity > 0 && attendance <= capacity) {
+              totalAttendance += attendance;
+              totalCapacity += capacity;
+              showCount++;
+            }
+          } catch (e) {
+            continue;
           }
-        } catch (e) {
-          // Skip invalid rows
-          continue;
         }
       }
     }
 
     // If parsing failed, use realistic fallback data
     if (showCount === 0) {
-      console.log('Parsing failed, using fallback data');
+      console.log('All parsing methods failed, using fallback data');
       showCount = 32; // Current approximate number of Broadway shows
       const avgCapacity = 1000;
       const avgAttendance = 850;
       
       totalCapacity = showCount * avgCapacity * 8; // 8 shows per week
       totalAttendance = showCount * avgAttendance * 8;
+    } else {
+      console.log(`Successfully parsed data for ${showCount} shows: ${totalAttendance.toLocaleString()} attendance, ${totalCapacity.toLocaleString()} capacity`);
     }
 
     // Get the most recent Sunday (Broadway week ends on Sunday)
