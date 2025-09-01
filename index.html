@@ -5,48 +5,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BUTTS IN SEATS</title>
 
-  <!-- Fonts & styles -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet"
   />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="main-screen">
-    <!-- Current-week data -->
-    <section class="data-section">
-      <h1 class="intro-text">Butts in Seats</h1>
+  <div id="loading" class="loading">LOADING BROADWAY DATA...</div>
+  <div id="error" class="error" hidden></div>
 
-      <p id="loading">Loading Broadway stats…</p>
-      <p id="error" role="alert" hidden></p>
+  <div id="dashboard" hidden>
+    <div class="main-screen">
+      <section class="data-section">
+        <p class="intro-text">LAST WEEK THERE WERE</p>
 
-      <div id="dashboard" hidden class="main-stats">
-        <div class="stat-item">
-          <p id="attendance" class="stat-number">0</p>
-          <p class="stat-label">Attendance</p>
+        <div class="main-stats">
+          <div class="stat-item">
+            <p id="attendance" class="stat-number">-</p>
+            <p class="stat-label">BUTTS IN</p>
+          </div>
+          <div class="stat-item">
+            <p id="capacity" class="stat-number">-</p>
+            <p class="stat-label">SEATS</p>
+          </div>
+          <div class="stat-item">
+            <p id="percentage" class="stat-number">-</p>
+            <p class="stat-label">FILLED</p>
+          </div>
         </div>
-        <div class="stat-item">
-          <p id="capacity" class="stat-number">0</p>
-          <p class="stat-label">Capacity</p>
-        </div>
-        <div class="stat-item">
-          <p id="percentage" class="stat-number">0%</p>
-          <p class="stat-label">Fill Rate</p>
-        </div>
-      </div>
-    </section>
+      </section>
+    </div>
 
-    <!-- Historical comparison -->
     <section class="comparison-section">
       <p class="comparison-intro">
-        Compare to previous years
+        THIS WEEK IN
         <span class="year-selector">
           <label for="year-select" class="sr-only">Select year</label>
           <select id="year-select">
-            <option value="2024" selected>2024</option>
+            <option value="2024">2024</option>
             <option value="2023">2023</option>
             <option value="2022">2022</option>
             <option value="2021">2021</option>
@@ -62,27 +61,35 @@
 
       <div class="historical-stats">
         <div class="historical-stat">
-          <p id="historical-attendance" class="historical-number">0</p>
-          <p class="historical-label">Attendance</p>
+          <p id="historical-attendance" class="historical-number">-</p>
+          <p class="historical-label">BUTTS IN</p>
         </div>
         <div class="historical-stat">
-          <p id="historical-capacity" class="historical-number">0</p>
-          <p class="historical-label">Capacity</p>
+          <p id="historical-capacity" class="historical-number">-</p>
+          <p class="historical-label">SEATS</p>
         </div>
         <div class="historical-stat">
-          <p id="historical-percentage" class="historical-number">0%</p>
-          <p class="historical-label">Fill Rate</p>
+          <p id="historical-percentage" class="historical-number">-</p>
+          <p class="historical-label">FILLED</p>
         </div>
       </div>
     </section>
 
-    <!-- Metadata & theme toggle -->
     <footer class="metadata">
-      <p id="week-ending"></p>
-      <p id="last-updated"></p>
+      <p id="week-ending">Week ending: -</p>
+      <p id="last-updated">Last updated: -</p>
+      <p>
+        Data source:
+        <a
+          href="https://www.broadwayworld.com/grosses.cfm"
+          target="_blank"
+          rel="noopener noreferrer"
+          >BROADWAYWORLD</a
+        >
+      </p>
       <button id="theme-toggle" aria-label="Toggle dark theme">🌓</button>
     </footer>
-  </main>
+  </div>
 
   <script>
     class BroadwayDashboard {
@@ -99,7 +106,6 @@
       async loadCurrentData() {
         try {
           const res = await fetch("/.netlify/functions/broadway-data");
-          if (!res.ok) throw new Error("Network response was not ok");
           const data = await res.json();
 
           document.getElementById("attendance").textContent =
@@ -170,16 +176,14 @@
       }
 
       showError(message) {
+        document.getElementById("loading").hidden = true;
         const err = document.getElementById("error");
         err.textContent = message;
         err.hidden = false;
-        document.getElementById("loading").hidden = true;
       }
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-      new BroadwayDashboard();
-    });
+    document.addEventListener("DOMContentLoaded", () => new BroadwayDashboard());
   </script>
 </body>
 </html>
