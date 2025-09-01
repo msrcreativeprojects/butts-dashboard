@@ -91,6 +91,7 @@ body {
 
 .percent-inline {
   color: #fff;
+  opacity: 1;
 }
 
 .intro-muted { opacity: 0.7; }
@@ -113,33 +114,46 @@ body {
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.03em;
+  margin-bottom: 0;
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 0;
+  gap: 4px;
 }
 
 .year-highlight {
   color: #fff;
   opacity: 1;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
+  min-width: 4ch;
+  display: inline-block;
 }
 
-.year-highlight:hover {
-  opacity: 0.8;
+.year-controls {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-left: 0;
 }
 
-.arrow-down {
+.year-btn {
+  background: none;
+  border: none;
   color: #fff;
-  font-size: clamp(1rem, 2vw, 2rem);
-  margin-left: 8px;
+  font-size: clamp(0.7rem, 1.2vw, 1.2rem);
   cursor: pointer;
+  padding: 0;
   transition: opacity 0.2s ease;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.arrow-down:hover {
-  opacity: 0.8;
+.year-btn:hover {
+  opacity: 0.7;
+}
+
+.year-btn:active {
+  opacity: 0.5;
 }
 
 .shows-running-text {
@@ -147,9 +161,6 @@ body {
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.03em;
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
   line-height: 1.1;
   margin-top: 0;
 }
@@ -161,6 +172,7 @@ body {
 
 .shows-group {
   display: inline;
+  margin-right: 4px;
 }
 
 .shows-label {
@@ -168,13 +180,7 @@ body {
   opacity: 1;
 }
 
-.year-select-hidden {
-  position: absolute;
-  top: -9999px;
-  left: -9999px;
-  opacity: 0;
-  pointer-events: none;
-}
+
 
 #year-select {
   background: #ffffff !important;
@@ -226,11 +232,11 @@ body {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  font-size: clamp(1.2rem, 2.5vw, 2.5rem);
+  font-size: clamp(1.5rem, 3vw, 3rem);
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.03em;
-  opacity: 0.7;
+  margin-top: 30px;
 }
 
 .metadata {
