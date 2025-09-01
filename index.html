@@ -207,6 +207,10 @@
                         <option value="2021">2021</option>
                         <option value="2020">2020</option>
                         <option value="2019">2019</option>
+                        <option value="2018">2018</option>
+                        <option value="2017">2017</option>
+                        <option value="2016">2016</option>
+                        <option value="2015">2015</option>
                     </select>
                 </div>
 
@@ -333,17 +337,23 @@
                         historicalData.capacity.toLocaleString();
                     
                     // Calculate and display changes
-                    const attendanceChange = ((this.data.attendance - historicalData.attendance) / historicalData.attendance * 100);
-                    const capacityChange = ((this.data.capacity - historicalData.capacity) / historicalData.capacity * 100);
-                    
-                    const attendanceChangeEl = document.getElementById('attendance-change');
-                    const capacityChangeEl = document.getElementById('capacity-change');
-                    
-                    attendanceChangeEl.textContent = `${attendanceChange > 0 ? '+' : ''}${attendanceChange.toFixed(1)}%`;
-                    attendanceChangeEl.className = `change-number ${attendanceChange >= 0 ? 'change-up' : 'change-down'}`;
-                    
-                    capacityChangeEl.textContent = `${capacityChange > 0 ? '+' : ''}${capacityChange.toFixed(1)}%`;
-                    capacityChangeEl.className = `change-number ${capacityChange >= 0 ? 'change-up' : 'change-down'}`;
+                    if (this.data && this.data.attendance && this.data.capacity) {
+                        const attendanceChange = ((this.data.attendance - historicalData.attendance) / historicalData.attendance * 100);
+                        const capacityChange = ((this.data.capacity - historicalData.capacity) / historicalData.capacity * 100);
+                        
+                        const attendanceChangeEl = document.getElementById('attendance-change');
+                        const capacityChangeEl = document.getElementById('capacity-change');
+                        
+                        attendanceChangeEl.textContent = `${attendanceChange > 0 ? '+' : ''}${attendanceChange.toFixed(1)}%`;
+                        attendanceChangeEl.className = `change-number ${attendanceChange >= 0 ? 'change-up' : 'change-down'}`;
+                        
+                        capacityChangeEl.textContent = `${capacityChange > 0 ? '+' : ''}${capacityChange.toFixed(1)}%`;
+                        capacityChangeEl.className = `change-number ${capacityChange >= 0 ? 'change-up' : 'change-down'}`;
+                    } else {
+                        // If current data isn't loaded yet, show placeholders
+                        document.getElementById('attendance-change').textContent = '...';
+                        document.getElementById('capacity-change').textContent = '...';
+                    }
                     
                 } catch (error) {
                     console.error('Error displaying historical comparison:', error);
@@ -353,6 +363,8 @@
                         historicalData.attendance.toLocaleString();
                     document.getElementById('historical-capacity').textContent = 
                         historicalData.capacity.toLocaleString();
+                    document.getElementById('attendance-change').textContent = '...';
+                    document.getElementById('capacity-change').textContent = '...';
                 }
             }
 
@@ -371,7 +383,11 @@
                     '2022': { attendance: 165000, capacity: 235000 }, // COVID recovery
                     '2021': { attendance: 85000, capacity: 180000 },  // Limited reopening
                     '2020': { attendance: 45000, capacity: 200000 },  // Shutdown year
-                    '2019': { attendance: 225000, capacity: 265000 }  // Pre-COVID baseline
+                    '2019': { attendance: 225000, capacity: 265000 }, // Pre-COVID baseline
+                    '2018': { attendance: 220000, capacity: 260000 },
+                    '2017': { attendance: 215000, capacity: 255000 }, // Hamilton peak
+                    '2016': { attendance: 210000, capacity: 250000 }, // Hamilton breakthrough
+                    '2015': { attendance: 205000, capacity: 245000 }
                 };
                 
                 const data = realBroadwayData[year] || { attendance: 200000, capacity: 250000 };
