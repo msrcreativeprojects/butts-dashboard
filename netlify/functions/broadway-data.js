@@ -1,13 +1,13 @@
+const cheerio = require('cheerio');
+
 exports.handler = async (event, context) => {
   try {
-    // CORS headers to allow your frontend to call this function
     const headers = {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     };
 
-    // Handle preflight requests
     if (event.httpMethod === 'OPTIONS') {
       return {
         statusCode: 200,
@@ -16,11 +16,8 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Fetch Broadway data from BroadwayWorld
     const response = await fetch('https://www.broadwayworld.com/grosses.cfm');
     const html = await response.text();
-
-    // Parse the data from the HTML
     const broadwayData = parseBroadwayData(html);
 
     return {
@@ -43,107 +40,42 @@ exports.handler = async (event, context) => {
 function parseBroadwayData(html) {
   try {
     let totalAttendance = 0;
-    let totalCapacity = 0;
     let showCount = 0;
 
-    console.log('Starting BroadwayWorld data parsing...');
+    console.log('Starting BroadwayWorld data parsing with cheerio...');
 
-    // Parse the BroadwayWorld grosses table using the new structure
-    // Extract attendance from data attributes and capacity from HTML spans
-    const rowRegex = /<div class="row"[^>]*data-attendee="([^"]*)"[^>]*>/g;
-    
-    let match;
-    const attendanceData = [];
-    
-    // First, extract all attendance data from data attributes
-    while ((match = rowRegex.exec(html)) !== null) {
-      const attendance = parseInt(match[1].replace(/,/g, '')) || 0;
+    const $ = cheerio.load(html);
+    $('div.row[data-attendee]').each((_, el) => {
+      const attendanceAttr = $(el).attr('data-attendee') || '';
+      const attendance = parseInt(attendanceAttr.replace(/,/g, '')) || 0;
       if (attendance > 0) {
-        attendanceData.push(attendance);
+        totalAttendance += attendance;
+        showCount++;
+        console.log(`Show ${showCount}: ${attendance.toLocaleString()} attendance`);
       }
-    }
-    
-    console.log(`Found ${attendanceData.length} shows with attendance data`);
-    
-    // Now extract capacity data from the HTML spans
-    // Look for pattern: <span class="out">attendance</span><span class="in">capacity</span>
-    const capacityMatches = html.match(/<span class="out">([^<]*)<\/span><span class="in">([^<]*)<\/span>/g) || [];
-    
-    console.log(`Found ${capacityMatches.length} capacity matches`);
-    
-    // Process each capacity match to get attendance and capacity
-    for (const capacityMatch of capacityMatches) {
-      const capacityMatchResult = /<span class="out">([^<]*)<\/span><span class="in">([^<]*)<\/span>/.exec(capacityMatch);
-      
-      if (capacityMatchResult) {
-        const attendance = parseInt(capacityMatchResult[1].replace(/,/g, '')) || 0;
-        const capacity = parseInt(capacityMatchResult[2].replace(/,/g, '')) || 0;
-        
-        if (attendance > 0 && capacity > 0 && attendance <= capacity) {
-          totalAttendance += attendance;
-          totalCapacity += capacity;
-          showCount++;
-          console.log(`Show ${showCount}: ${attendance.toLocaleString()} attendance, ${capacity.toLocaleString()} capacity`);
-        }
-      }
-    }
+    });
 
-    // If the new parsing method didn't work, try the old method as fallback
     if (showCount === 0) {
-      console.log('New parsing failed, trying old method');
-      const tableRowRegex = /<tr[^>]*>.*?<\/tr>/gs;
-      const oldRows = html.match(tableRowRegex) || [];
-      
-      for (const row of oldRows) {
-        const numberMatches = row.match(/(\d{1,3}(?:,\d{3})*)/g);
-        
-        if (numberMatches && numberMatches.length >= 8) {
-          try {
-            const attendance = parseInt(numberMatches[4]?.replace(/,/g, '')) || 0;
-            const capacity = parseInt(numberMatches[5]?.replace(/,/g, '')) || 0;
-            
-            if (attendance > 0 && capacity > 0 && attendance <= capacity) {
-              totalAttendance += attendance;
-              totalCapacity += capacity;
-              showCount++;
-            }
-          } catch (e) {
-            continue;
-          }
-        }
-      }
-    }
-
-    // If parsing failed, use realistic fallback data
-    if (showCount === 0) {
-      console.log('All parsing methods failed, using fallback data');
-      showCount = 32; // Current approximate number of Broadway shows
-      const avgCapacity = 1000;
+      console.log('Parsing failed, using fallback data');
+      showCount = 32; // Approximate number of Broadway shows
       const avgAttendance = 850;
-      
-      totalCapacity = showCount * avgCapacity * 8; // 8 shows per week
-      totalAttendance = showCount * avgAttendance * 8;
+      totalAttendance = showCount * avgAttendance * 8; // 8 shows per week
     } else {
-      console.log(`Successfully parsed data for ${showCount} shows: ${totalAttendance.toLocaleString()} attendance, ${totalCapacity.toLocaleString()} capacity`);
+      console.log(`Successfully parsed data for ${showCount} shows: ${totalAttendance.toLocaleString()} attendance`);
     }
 
-    // Get the most recent Sunday (Broadway week ends on Sunday)
     const now = new Date();
     const weekEnding = new Date(now);
     const daysSinceWeekend = (now.getDay() + 7) % 7;
     weekEnding.setDate(now.getDate() - daysSinceWeekend);
 
-    const fillPercentage = Math.round((totalAttendance / totalCapacity) * 100);
-
     return {
       attendance: totalAttendance,
-      capacity: totalCapacity,
-      percentage: fillPercentage,
       showCount: showCount,
-      weekEnding: weekEnding.toLocaleDateString('en-US', { 
-        month: 'long', 
-        day: 'numeric', 
-        year: 'numeric' 
+      weekEnding: weekEnding.toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
       }),
       lastUpdated: new Date().toLocaleString('en-US', {
         weekday: 'long',
@@ -159,16 +91,13 @@ function parseBroadwayData(html) {
     };
   } catch (error) {
     console.error('Error parsing Broadway data:', error);
-    // Return fallback data
     return {
       attendance: 217600,
-      capacity: 256000,
-      percentage: 85,
       showCount: 32,
-      weekEnding: new Date().toLocaleDateString('en-US', { 
-        month: 'long', 
-        day: 'numeric', 
-        year: 'numeric' 
+      weekEnding: new Date().toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
       }),
       lastUpdated: new Date().toLocaleString('en-US', {
         weekday: 'long',

@@ -66,13 +66,11 @@ async function getDataFromGitHubDataset(year, week) {
     const headers = lines[0].split(',');
     
     let totalAttendance = 0;
-    let totalCapacity = 0;
     let showCount = 0;
     
     // Find the week_ending column index
     const weekEndingIndex = headers.indexOf('week_ending');
     const seatsSoldIndex = headers.indexOf('seats_sold');
-    const seatsInTheatreIndex = headers.indexOf('seats_in_theatre');
     
     // Convert week number to date format (DD-MM-YY)
     const weekEndingDate = getWeekEndingDate(year, week);
@@ -86,26 +84,19 @@ async function getDataFromGitHubDataset(year, week) {
       
       if (lineWeekEnding === weekEndingDate) {
         const attendance = parseInt(values[seatsSoldIndex]) || 0;
-        const capacity = parseInt(values[seatsInTheatreIndex]) || 0;
-        
-        if (attendance > 0 && capacity > 0) {
+        if (attendance > 0) {
           totalAttendance += attendance;
-          totalCapacity += capacity;
           showCount++;
         }
       }
     }
-    
+
     if (showCount === 0) {
       throw new Error(`No data found for year ${year}, week ${week}`);
     }
-    
-    const fillPercentage = Math.round((totalAttendance / totalCapacity) * 100);
-    
+
     return {
       attendance: totalAttendance,
-      capacity: totalCapacity,
-      percentage: fillPercentage,
       year: year,
       week: week,
       context: `Real weekly data from GitHub dataset (${year}, week ${week})`,
@@ -140,7 +131,6 @@ async function getDataFromBroadwayWorld(year, week) {
 function parseBroadwayWorldData(html, year, week) {
   try {
     let totalAttendance = 0;
-    let totalCapacity = 0;
     let showCount = 0;
 
     // Parse the BroadwayWorld weekly grosses table
@@ -149,17 +139,14 @@ function parseBroadwayWorldData(html, year, week) {
     
     // BroadwayWorld shows data in table rows with specific patterns
     for (const row of rows) {
-      // Look for attendance/capacity patterns
+      // Extract numeric values from each row
       const numberMatches = row.match(/(\d{1,3}(?:,\d{3})*)/g);
-      
-      if (numberMatches && numberMatches.length >= 8) {
+
+      if (numberMatches && numberMatches.length >= 5) {
         try {
           const attendance = parseInt(numberMatches[4]?.replace(/,/g, '')) || 0;
-          const capacity = parseInt(numberMatches[5]?.replace(/,/g, '')) || 0;
-          
-          if (attendance > 0 && capacity > 0 && attendance <= capacity) {
+          if (attendance > 0) {
             totalAttendance += attendance;
-            totalCapacity += capacity;
             showCount++;
           }
         } catch (e) {
@@ -172,12 +159,8 @@ function parseBroadwayWorldData(html, year, week) {
       throw new Error(`No valid data found for year ${year}, week ${week}`);
     }
 
-    const fillPercentage = Math.round((totalAttendance / totalCapacity) * 100);
-
     return {
       attendance: totalAttendance,
-      capacity: totalCapacity,
-      percentage: fillPercentage,
       year: year,
       week: week,
       context: `Real weekly data from BroadwayWorld (${year}, week ${week})`,
