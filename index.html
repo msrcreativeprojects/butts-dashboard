@@ -60,6 +60,13 @@
           ✦
         </a>
       </div>
+      <div class="theme-selector">
+        <div class="theme-option" data-theme="blue" title="Blue"></div>
+        <div class="theme-option" data-theme="green" title="Green"></div>
+        <div class="theme-option" data-theme="pink" title="Pink"></div>
+        <div class="theme-option" data-theme="white" title="White"></div>
+        <div class="theme-option" data-theme="black" title="Black"></div>
+      </div>
       <div class="data-source-tag">
         Data: <a
           href="https://www.broadwayworld.com/grosses.cfm"
@@ -88,7 +95,7 @@
       async init() {
         await this.loadCurrentData();
         this.setupYearSelector();
-        this.setupThemeToggle();
+        this.setupThemeSelector();
         this.setupViewportTracker();
         this.setupDebugInfo();
       }
@@ -450,18 +457,31 @@
         return Math.ceil((days + start.getDay() + 1) / 7);
       }
 
-      setupThemeToggle() {
-        const btn = document.getElementById("theme-toggle");
+      setupThemeSelector() {
         const root = document.documentElement;
-        const stored = localStorage.getItem("theme");
-        if (stored) root.setAttribute("data-theme", stored);
-
-        btn.addEventListener("click", () => {
-          const current = root.getAttribute("data-theme") === "dark"
-            ? "light"
-            : "dark";
-          root.setAttribute("data-theme", current);
-          localStorage.setItem("theme", current);
+        const themeOptions = document.querySelectorAll('.theme-option');
+        
+        // Load saved theme or default to blue
+        const savedTheme = localStorage.getItem("theme") || "blue";
+        root.setAttribute("data-theme", savedTheme);
+        
+        // Set active state for current theme
+        const updateActiveTheme = (activeTheme) => {
+          themeOptions.forEach(option => {
+            option.classList.toggle('active', option.dataset.theme === activeTheme);
+          });
+        };
+        
+        updateActiveTheme(savedTheme);
+        
+        // Add click handlers for theme options
+        themeOptions.forEach(option => {
+          option.addEventListener('click', () => {
+            const newTheme = option.dataset.theme;
+            root.setAttribute("data-theme", newTheme);
+            localStorage.setItem("theme", newTheme);
+            updateActiveTheme(newTheme);
+          });
         });
       }
 
