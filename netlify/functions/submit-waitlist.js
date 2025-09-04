@@ -25,10 +25,10 @@ exports.handler = async (event, context) => {
     // Prepare data for Airtable
     const airtableData = {
       "fields": {
-        "CONTACT NAME": data.name.trim(),
-        "CONTACT EMAIL": data.work_email.trim(),
-        "NAME": data.org_name.trim(),
-        "CITY/REGION": data.city_region.trim(),
+        "Contact Name": data.name.trim(),
+        "Contact Email": data.work_email.trim(),
+        "Name": data.org_name.trim(),
+        "City/Region": data.city_region.trim(),
         "Submitted At": new Date().toISOString()
       }
     };
