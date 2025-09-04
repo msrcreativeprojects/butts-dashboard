@@ -314,12 +314,56 @@ body::before {
   background: var(--blue-darker);
   padding: 40px clamp(20px, 5vw, 40px);
   font-family: "Inter", -apple-system, system-ui, sans-serif;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: start;
-  gap: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
+}
+
+.footer-left {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+}
+
+.footer-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+}
+
+.footer-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+}
+
+.waitlist-cta {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  opacity: 0.8;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.waitlist-cta:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 
@@ -525,10 +569,6 @@ body::before {
 
 
 .fourth-wall-attribution {
-  position: absolute;
-  top: 50%;
-  left: clamp(20px, 5vw, 40px);
-  transform: translateY(-50%);
   font-size: 0.8rem;
   font-weight: 400;
   letter-spacing: 0.02em;
@@ -615,9 +655,22 @@ body::before {
 
 @media (max-width: 768px) {
   .metadata {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     gap: 24px;
     padding: 80px clamp(20px, 5vw, 40px) 60px;
+  }
+  
+  .footer-left,
+  .footer-center,
+  .footer-right {
+    flex: none;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .waitlist-cta {
+    font-size: 18px;
+    padding: 12px 24px;
   }
   
   /* Mobile: Larger touch targets for theme options */
@@ -669,14 +722,8 @@ body::before {
   }
   
   
-  /* Mobile: Stack attributions in bottom center */
+  /* Mobile: Center attributions */
   .fourth-wall-attribution {
-    position: absolute;
-    top: auto;
-    bottom: 32.5px;
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
     text-align: center;
     font-size: 0.65rem;
   }
@@ -705,6 +752,147 @@ body::before {
 }
 
 /* Waitlist Page Styles */
+.waitlist-body {
+  background: var(--blue) !important;
+}
+
+/* Native Form Styles */
+.native-form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 60px 40px;
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.form-title {
+  font-size: clamp(40px, 12vw, 80px);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  line-height: 0.9;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+
+.form-description {
+  font-size: clamp(16px, 4vw, 20px);
+  font-weight: 400;
+  color: var(--text);
+  opacity: 0.8;
+}
+
+.native-form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text);
+  opacity: 0.8;
+}
+
+.form-group input,
+.form-group select {
+  padding: 16px 20px;
+  font-size: 16px;
+  font-family: "Inter", -apple-system, system-ui, sans-serif;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: var(--text);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.form-group input::placeholder,
+.form-group select option {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.submit-btn {
+  padding: 18px 32px;
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: "Inter", -apple-system, system-ui, sans-serif;
+  margin-top: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+.btn-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.form-message {
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+.form-message.success {
+  background: rgba(0, 255, 0, 0.1);
+  border: 2px solid rgba(0, 255, 0, 0.3);
+  color: #00ff00;
+}
+
+.form-message.error {
+  background: rgba(255, 0, 0, 0.1);
+  border: 2px solid rgba(255, 0, 0, 0.3);
+  color: #ff6b6b;
+}
 .waitlist-header {
   margin-bottom: 60px;
   text-align: center;
@@ -731,14 +919,8 @@ body::before {
 }
 
 .form-container {
-  max-width: 600px;
-  margin: 0 auto 60px auto;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 40px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+  margin: 0;
 }
 
 .back-link {
@@ -761,11 +943,6 @@ body::before {
 }
 
 @media (max-width: 768px) {
-  .form-container {
-    margin: 0 0 40px 0;
-    padding: 30px 20px;
-  }
-  
   .waitlist-header {
     margin-bottom: 40px;
   }

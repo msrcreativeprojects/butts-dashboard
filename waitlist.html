@@ -28,7 +28,7 @@
   />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body data-theme="blue">
+<body data-theme="blue" class="waitlist-body">
   <div id="loading-screen" class="loading-screen">
     <div class="loading-star">✦</div>
   </div>
@@ -36,17 +36,41 @@
   <div id="waitlist-page">
     <div class="main-screen">
       <section class="data-section">
-        <div class="waitlist-header">
-          <h1 class="waitlist-title">JOIN THE<br>WAITLIST</h1>
-          <p class="waitlist-description">
-            Want to add your butts to the Broadway attendance count? 
-            Join the waitlist to be notified when we launch user submissions!
-          </p>
-        </div>
-        
-        <!-- Airtable form embedded here -->
-        <div class="form-container">
-          <iframe class="airtable-embed" src="https://airtable.com/embed/appUs3QHYm7s0knah/pagNHxQUCyxo6AguM/form" frameborder="0" onmousewheel="" width="100%" height="533" style="background: transparent; border: 1px solid #ccc;"></iframe>
+        <!-- Native waitlist form -->
+        <div class="native-form-container">
+          <div class="form-header">
+            <h1 class="form-title">JOIN THE<br>WAITLIST</h1>
+            <p class="form-description">Add your butts to the Broadway attendance count</p>
+          </div>
+          
+          <form id="waitlist-form" class="native-form">
+            <div class="form-group">
+              <label for="name">NAME</label>
+              <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="work-email">WORK EMAIL</label>
+              <input type="email" id="work-email" name="work_email" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="org-name">ORG / THEATER / SCHOOL NAME</label>
+              <input type="text" id="org-name" name="org_name" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="city-region">CITY / REGION</label>
+              <input type="text" id="city-region" name="city_region" required>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+              <span class="btn-text">JOIN THE COUNT</span>
+              <div class="btn-loading" style="display: none;">✦</div>
+            </button>
+            
+            <div id="form-message" class="form-message" style="display: none;"></div>
+          </form>
         </div>
         
         <div class="back-link">
@@ -56,18 +80,8 @@
     </div>
 
     <footer class="metadata">
-      <div class="theme-selector">
-        <div class="theme-option" data-theme="blue" title="Blue"></div>
-        <div class="theme-option" data-theme="green" title="Green"></div>
-        <div class="theme-option" data-theme="pink" title="Pink"></div>
-        <button id="shuffle-theme" class="shuffle-button" title="Random Color">✦</button>
-      </div>
-      
       <div class="fourth-wall-attribution" style="opacity: 0.8;">
         A <a href="http://fourthwall.news" target="_blank" rel="noopener noreferrer"><strong>Fourth Wall</strong></a> Project
-      </div>
-      <div class="data-source-tag" style="opacity: 0.6;">
-        Data: <a href="https://www.broadwayworld.com/grosses.cfm" target="_blank" rel="noopener noreferrer">BroadwayWorld</a>
       </div>
     </footer>
   </div>
@@ -80,8 +94,7 @@
       }
 
       async init() {
-        this.setupThemeSelector();
-        this.setupShuffleTheme();
+        this.setupFormSubmission();
         this.hideLoadingScreen();
       }
 
@@ -222,6 +235,72 @@
         const color3 = `hsl(${hue}, ${saturation}%, ${Math.max(lightness - 25, 15)}%)`;
         
         this.applyRandomTheme(color1, color2, color3, '#ffffff');
+      }
+
+      setupFormSubmission() {
+        const form = document.getElementById('waitlist-form');
+        const submitBtn = form.querySelector('.submit-btn');
+        const btnText = submitBtn.querySelector('.btn-text');
+        const btnLoading = submitBtn.querySelector('.btn-loading');
+        const messageDiv = document.getElementById('form-message');
+
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          
+          // Show loading state
+          btnText.style.display = 'none';
+          btnLoading.style.display = 'block';
+          submitBtn.disabled = true;
+          
+          // Get form data
+          const formData = new FormData(form);
+          const data = {
+            "CONTACT NAME": formData.get('name'),
+            "CONTACT EMAIL": formData.get('work_email'),
+            "NAME": formData.get('org_name'),
+            "CITY/REGION": formData.get('city_region'),
+            "Submitted At": new Date().toISOString()
+          };
+
+          try {
+            // Submit to secure Netlify function
+            const response = await fetch('/.netlify/functions/submit-waitlist', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                name: formData.get('name'),
+                work_email: formData.get('work_email'),
+                org_name: formData.get('org_name'),
+                city_region: formData.get('city_region')
+              })
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+              // Success
+              messageDiv.textContent = 'Welcome to the waitlist! We\'ll be in touch soon.';
+              messageDiv.className = 'form-message success';
+              messageDiv.style.display = 'block';
+              form.reset();
+            } else {
+              throw new Error(result.error || 'Submission failed');
+            }
+
+          } catch (error) {
+            // Error
+            messageDiv.textContent = error.message || 'Something went wrong. Please try again.';
+            messageDiv.className = 'form-message error';
+            messageDiv.style.display = 'block';
+          }
+
+          // Reset button state
+          btnText.style.display = 'block';
+          btnLoading.style.display = 'none';
+          submitBtn.disabled = false;
+        });
       }
     }
 
