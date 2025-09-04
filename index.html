@@ -20,7 +20,14 @@
     <div class="main-screen">
       <section class="data-section">
         <p id="intro-text" class="intro-text"></p>
-
+        
+        <!-- Share button in bottom right of data section -->
+        <button id="share-button" class="share-button" title="Share to Instagram Story">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 17L17 7"/>
+            <path d="M7 7h10v10"/>
+          </svg>
+        </button>
       </section>
     </div>
 
@@ -67,6 +74,9 @@
         <div class="theme-option" data-theme="white" title="White"></div>
         <div class="theme-option" data-theme="black" title="Black"></div>
       </div>
+      <button id="preview-button" class="preview-button" title="Preview Share Image">
+        👁️
+      </button>
       <div class="data-source-tag">
         Data: <a
           href="https://www.broadwayworld.com/grosses.cfm"
@@ -96,6 +106,7 @@
         await this.loadCurrentData();
         this.setupYearSelector();
         this.setupThemeSelector();
+        this.setupShareButton();
         this.setupViewportTracker();
         this.setupDebugInfo();
       }
@@ -483,6 +494,203 @@
             updateActiveTheme(newTheme);
           });
         });
+      }
+
+      setupShareButton() {
+        const shareButton = document.getElementById('share-button');
+        const previewButton = document.getElementById('preview-button');
+        
+        shareButton.addEventListener('click', () => {
+          this.generateShareImage();
+        });
+        
+        previewButton.addEventListener('click', () => {
+          this.previewShareImage();
+        });
+      }
+
+      getCurrentThemeColors() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'blue';
+        const themes = {
+          blue: { primary: '#0052cc', dark: '#003d99', text: '#fff' },
+          green: { primary: '#0d7377', dark: '#14a085', text: '#fff' },
+          pink: { primary: '#d63384', dark: '#b02a5b', text: '#fff' },
+          white: { primary: '#ffffff', dark: '#f8f9fa', text: '#212529' },
+          black: { primary: '#000000', dark: '#1a1a1a', text: '#ffffff' }
+        };
+        return themes[currentTheme];
+      }
+
+      generateShareImage() {
+        const canvas = this.createShareImageCanvas();
+        
+        // Get current data for share text
+        const attendanceEl = document.getElementById('attendance-number');
+        const attendance = attendanceEl ? attendanceEl.textContent : '000000';
+        
+        const introText = document.getElementById('intro-text').innerHTML;
+        const showCountMatch = introText.match(/(\d+) SHOWS/);
+        const showCount = showCountMatch ? showCountMatch[1] : '0';
+        
+        // Convert canvas to blob and download/share
+        canvas.toBlob((blob) => {
+          if (navigator.share && navigator.canShare && navigator.canShare({ files: [new File([blob], 'broadway-attendance.png', { type: 'image/png' })] })) {
+            // Use Web Share API if available (mobile)
+            const file = new File([blob], 'broadway-attendance.png', { type: 'image/png' });
+            navigator.share({
+              title: 'Broadway Attendance',
+              text: `Last week there were ${showCount} shows running and ${attendance} butts in seats!`,
+              files: [file]
+            }).catch(console.error);
+          } else {
+            // Fallback: download the image
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'broadway-attendance.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+          }
+        }, 'image/png');
+      }
+
+      previewShareImage() {
+        const canvas = this.createShareImageCanvas();
+        
+        // Convert to data URL for preview
+        const dataURL = canvas.toDataURL('image/png');
+        
+        // Create preview overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'image-preview-overlay';
+        
+        const container = document.createElement('div');
+        container.className = 'image-preview-container';
+        
+        const img = document.createElement('img');
+        img.src = dataURL;
+        img.alt = 'Share Image Preview';
+        
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'preview-close-btn';
+        closeBtn.innerHTML = '×';
+        closeBtn.addEventListener('click', () => {
+          document.body.removeChild(overlay);
+        });
+        
+        container.appendChild(img);
+        container.appendChild(closeBtn);
+        overlay.appendChild(container);
+        
+        // Close on overlay click
+        overlay.addEventListener('click', (e) => {
+          if (e.target === overlay) {
+            document.body.removeChild(overlay);
+          }
+        });
+        
+        // Close on Escape key
+        const handleEscape = (e) => {
+          if (e.key === 'Escape') {
+            document.body.removeChild(overlay);
+            document.removeEventListener('keydown', handleEscape);
+          }
+        };
+        document.addEventListener('keydown', handleEscape);
+        
+        document.body.appendChild(overlay);
+      }
+
+      createShareImageCanvas() {
+        // Get current attendance data
+        const attendanceEl = document.getElementById('attendance-number');
+        const attendance = attendanceEl ? attendanceEl.textContent : '000000';
+        
+        // Get current show count
+        const introText = document.getElementById('intro-text').innerHTML;
+        const showCountMatch = introText.match(/(\d+) SHOWS/);
+        const showCount = showCountMatch ? showCountMatch[1] : '0';
+        
+        // Get current theme colors
+        const colors = this.getCurrentThemeColors();
+        
+        // Create canvas for Instagram Story dimensions
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = 1080;
+        canvas.height = 1920;
+        
+        // Fill background with theme color
+        ctx.fillStyle = colors.primary;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Add subtle grain texture
+        ctx.globalAlpha = 0.03;
+        for (let i = 0; i < 3000; i++) {
+          const x = Math.random() * canvas.width;
+          const y = Math.random() * canvas.height;
+          ctx.fillStyle = colors.text;
+          ctx.fillRect(x, y, 1, 1);
+        }
+        ctx.globalAlpha = 1;
+        
+        // Set text properties
+        ctx.fillStyle = colors.text;
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'alphabetic';
+        
+        // Better font sizes - 25% larger (split the difference)
+        const introFontSize = Math.round(85 * 1.25); // 106px
+        const attendanceFontSize = Math.round(160 * 1.25); // 200px
+        const leftMargin = Math.round(60 * 1.25); // 75px
+        
+        // Tighter spacing that matches the site better
+        const introSpacing = introFontSize * 0.9 + 5; // Close to CSS line-height: 0.9 with small buffer
+        const attendanceSpacing = attendanceFontSize * 0.9 + 15; // Attendance gets a bit more buffer
+        
+        // Center the text block vertically in the 1920px height frame
+        // Estimate total height needed and start from center
+        const totalTextHeight = (introSpacing * 4) + (attendanceSpacing) + 60; // Rough estimate
+        const centerY = (canvas.height - totalTextHeight) / 2;
+        let currentY = centerY;
+        
+        // Set intro font
+        ctx.font = `900 ${introFontSize}px Inter, -apple-system, system-ui, sans-serif`;
+        
+        // "LAST WEEK" - faded
+        ctx.globalAlpha = 0.7;
+        ctx.fillText('LAST WEEK', leftMargin, currentY);
+        currentY += introSpacing;
+        
+        // "THERE WERE" - faded  
+        ctx.fillText('THERE WERE', leftMargin, currentY);
+        currentY += introSpacing;
+        
+        // "X SHOWS" - highlighted
+        ctx.globalAlpha = 1;
+        ctx.fillText(`${showCount} SHOWS`, leftMargin, currentY);
+        currentY += introSpacing;
+        
+        // "RUNNING AND" - faded
+        ctx.globalAlpha = 0.7;
+        ctx.fillText('RUNNING AND', leftMargin, currentY);
+        currentY += introSpacing + 70; // Split the difference - 70px space before big number
+        
+        // Main attendance number - large and highlighted
+        ctx.globalAlpha = 1;
+        ctx.font = `900 ${attendanceFontSize}px Inter, -apple-system, system-ui, sans-serif`;
+        ctx.fillText(attendance, leftMargin, currentY);
+        currentY += attendanceSpacing - 90; // Split the difference - "BUTTS IN SEATS" close to the number
+        
+        // "BUTTS IN SEATS" - faded, back to intro font size
+        ctx.globalAlpha = 0.7;
+        ctx.font = `900 ${introFontSize}px Inter, -apple-system, system-ui, sans-serif`;
+        ctx.fillText('BUTTS IN SEATS', leftMargin, currentY);
+        
+        return canvas;
       }
 
       showError(message) {
