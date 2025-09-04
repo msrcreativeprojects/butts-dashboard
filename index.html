@@ -8,6 +8,21 @@
   <!-- Four-pointed star favicon -->
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/favicon.svg">
+  
+  <!-- Open Graph / Social Media Preview -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="BUTTS IN SEATS">
+  <meta property="og:description" content="Live Broadway attendance tracking - see how many butts are in seats this week!">
+  <meta property="og:image" content="/social-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="1200">
+  <meta property="og:url" content="https://buttsinseats.xyz">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BUTTS IN SEATS">
+  <meta name="twitter:description" content="Live Broadway attendance tracking">
+  <meta name="twitter:image" content="/social-preview.jpg">
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -106,6 +121,7 @@
         this.setupViewportTracker();
         this.setupDebugInfo();
         this.setupShuffleTheme();
+        this.generateSocialPreview();
         this.hideLoadingScreen();
       }
 
@@ -282,6 +298,86 @@
         this.applyRandomTheme(color1, color2, color3, '#ffffff');
       }
 
+      generateSocialPreview() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Get current theme colors
+        const bodyStyles = getComputedStyle(document.body);
+        const bgColor = bodyStyles.getPropertyValue('--blue').trim() || '#0052cc';
+        const textColor = bodyStyles.getPropertyValue('--text').trim() || '#ffffff';
+        
+        // Get just the main attendance text (not footer)
+        const introText = document.getElementById('intro-text')?.textContent || 'BUTTS IN SEATS';
+        const words = introText.trim().split(' ');
+        
+        // Calculate optimal font size and dimensions  
+        const maxWidth = 1200;
+        const padding = 40; // Reduced padding
+        const fontSize = 120;
+        const lineHeight = fontSize * 1.1;
+        
+        ctx.font = `900 ${fontSize}px Inter, -apple-system, system-ui, sans-serif`;
+        
+        // Group words into lines that fit within maxWidth
+        const lines = [];
+        let currentLine = '';
+        
+        words.forEach(word => {
+          const testLine = currentLine ? `${currentLine} ${word}` : word;
+          const metrics = ctx.measureText(testLine);
+          
+          if (metrics.width <= maxWidth - (padding * 2)) {
+            currentLine = testLine;
+          } else {
+            if (currentLine) lines.push(currentLine);
+            currentLine = word;
+          }
+        });
+        if (currentLine) lines.push(currentLine);
+        
+        // Calculate canvas dimensions based on text
+        const textWidth = Math.max(...lines.map(line => ctx.measureText(line).width));
+        const textHeight = lines.length * lineHeight;
+        
+        canvas.width = Math.max(textWidth + (padding * 2), 600);
+        canvas.height = textHeight + padding + (padding * 0.5); // Less bottom padding
+        
+        // Redraw with final dimensions
+        ctx.font = `900 ${fontSize}px Inter, -apple-system, system-ui, sans-serif`;
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.fillStyle = textColor;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        
+        // Draw each line
+        lines.forEach((line, index) => {
+          const x = canvas.width / 2;
+          const y = padding + (index * lineHeight);
+          ctx.fillText(line, x, y);
+        });
+        
+        // Convert to blob and create URL
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const url = URL.createObjectURL(blob);
+            // Update meta tag
+            const ogImage = document.querySelector('meta[property="og:image"]');
+            const twitterImage = document.querySelector('meta[name="twitter:image"]');
+            if (ogImage) ogImage.content = url;
+            if (twitterImage) twitterImage.content = url;
+            
+            // Update dimensions in meta tags
+            const ogWidth = document.querySelector('meta[property="og:image:width"]');
+            const ogHeight = document.querySelector('meta[property="og:image:height"]');
+            if (ogWidth) ogWidth.content = canvas.width;
+            if (ogHeight) ogHeight.content = canvas.height;
+          }
+        }, 'image/jpeg', 0.95);
+      }
+
       async loadCurrentData() {
         try {
           const fetchPromise = fetch("/.netlify/functions/broadway-data");
@@ -329,6 +425,9 @@
         
         // Animate the attendance number
         this.animateAttendanceNumber(data.attendance);
+        
+        // Generate social preview after display updates
+        setTimeout(() => this.generateSocialPreview(), 500);
       }
 
       animateAttendanceNumber(finalNumber) {

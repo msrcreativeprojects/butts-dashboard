@@ -620,6 +620,18 @@ body::before {
     padding: 80px clamp(20px, 5vw, 40px) 60px;
   }
   
+  /* Mobile: Larger touch targets for theme options */
+  .theme-option {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .shuffle-button {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+  }
+  
   .footer-logo {
     display: none; /* Hide Fourth Wall logo on mobile */
   }
@@ -690,6 +702,73 @@ body::before {
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.03em;
+}
+
+/* Waitlist Page Styles */
+.waitlist-header {
+  margin-bottom: 60px;
+  text-align: center;
+}
+
+.waitlist-title {
+  font-size: clamp(40px, 15vw, 120px);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  line-height: 0.9;
+  margin-bottom: 30px;
+  color: var(--text);
+}
+
+.waitlist-description {
+  font-size: clamp(16px, 4vw, 24px);
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--text);
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-container {
+  max-width: 600px;
+  margin: 0 auto 60px auto;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 40px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.back-link {
+  text-align: center;
+}
+
+.back-button {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 18px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.back-button:hover {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .form-container {
+    margin: 0 0 40px 0;
+    padding: 30px 20px;
+  }
+  
+  .waitlist-header {
+    margin-bottom: 40px;
+  }
 }
 
 .sr-only {

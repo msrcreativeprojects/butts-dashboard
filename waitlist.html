@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join the Waitlist - BUTTS IN SEATS</title>
+  
+  <!-- Four-pointed star favicon -->
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  
+  <!-- Open Graph / Social Media Preview -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Join the Waitlist - BUTTS IN SEATS">
+  <meta property="og:description" content="Add your butts to the Broadway attendance count - join the waitlist!">
+  <meta property="og:url" content="https://buttsinseats.xyz/waitlist">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Join the Waitlist - BUTTS IN SEATS">
+  <meta name="twitter:description" content="Add your butts to the Broadway attendance count">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-theme="blue">
+  <div id="loading-screen" class="loading-screen">
+    <div class="loading-star">✦</div>
+  </div>
+
+  <div id="waitlist-page">
+    <div class="main-screen">
+      <section class="data-section">
+        <div class="waitlist-header">
+          <h1 class="waitlist-title">JOIN THE<br>WAITLIST</h1>
+          <p class="waitlist-description">
+            Want to add your butts to the Broadway attendance count? 
+            Join the waitlist to be notified when we launch user submissions!
+          </p>
+        </div>
+        
+        <!-- Airtable form embedded here -->
+        <div class="form-container">
+          <iframe class="airtable-embed" src="https://airtable.com/embed/appUs3QHYm7s0knah/pagNHxQUCyxo6AguM/form" frameborder="0" onmousewheel="" width="100%" height="533" style="background: transparent; border: 1px solid #ccc;"></iframe>
+        </div>
+        
+        <div class="back-link">
+          <a href="/" class="back-button">← Back to Dashboard</a>
+        </div>
+      </section>
+    </div>
+
+    <footer class="metadata">
+      <div class="theme-selector">
+        <div class="theme-option" data-theme="blue" title="Blue"></div>
+        <div class="theme-option" data-theme="green" title="Green"></div>
+        <div class="theme-option" data-theme="pink" title="Pink"></div>
+        <button id="shuffle-theme" class="shuffle-button" title="Random Color">✦</button>
+      </div>
+      
+      <div class="fourth-wall-attribution" style="opacity: 0.8;">
+        A <a href="http://fourthwall.news" target="_blank" rel="noopener noreferrer"><strong>Fourth Wall</strong></a> Project
+      </div>
+      <div class="data-source-tag" style="opacity: 0.6;">
+        Data: <a href="https://www.broadwayworld.com/grosses.cfm" target="_blank" rel="noopener noreferrer">BroadwayWorld</a>
+      </div>
+    </footer>
+  </div>
+
+
+  <script>
+    class WaitlistPage {
+      constructor() {
+        this.init();
+      }
+
+      async init() {
+        this.setupThemeSelector();
+        this.setupShuffleTheme();
+        this.hideLoadingScreen();
+      }
+
+      hideLoadingScreen() {
+        const loadingScreen = document.getElementById('loading-screen');
+        setTimeout(() => {
+          loadingScreen.classList.add('hidden');
+          setTimeout(() => {
+            loadingScreen.remove();
+          }, 500);
+        }, 800);
+      }
+
+      setupThemeSelector() {
+        const root = document.documentElement;
+        const themeOptions = document.querySelectorAll('.theme-option');
+        
+        // Get available themes from the DOM
+        const availableThemes = Array.from(themeOptions).map(option => option.dataset.theme);
+        
+        // Load saved theme or default to blue, but ensure it's valid
+        const savedTheme = localStorage.getItem("theme") || "blue";
+        const validTheme = availableThemes.includes(savedTheme) ? savedTheme : "blue";
+        root.setAttribute("data-theme", validTheme);
+        
+        // Set active state for current theme
+        const updateActiveTheme = (activeTheme) => {
+          themeOptions.forEach(option => {
+            option.classList.toggle('active', option.dataset.theme === activeTheme);
+          });
+        };
+        
+        updateActiveTheme(validTheme);
+        
+        // Add click handlers for theme options
+        themeOptions.forEach(option => {
+          option.addEventListener('click', () => {
+            const newTheme = option.dataset.theme;
+            
+            // Clear any custom CSS properties from random themes
+            root.style.removeProperty('--blue');
+            root.style.removeProperty('--blue-dark');
+            root.style.removeProperty('--blue-darker');
+            root.style.removeProperty('--text');
+            
+            // Set the theme
+            root.setAttribute("data-theme", newTheme);
+            localStorage.setItem("theme", newTheme);
+            updateActiveTheme(newTheme);
+          });
+        });
+      }
+
+      setupShuffleTheme() {
+        const shuffleButton = document.getElementById('shuffle-theme');
+        shuffleButton.addEventListener('click', () => {
+          this.generateRandomTheme();
+        });
+      }
+
+      async generateRandomTheme() {
+        try {
+          // Use bright, fun models that generate beautiful colors
+          const brightModels = ['flower_photography', 'sunset', 'ui', 'default'];
+          const randomModel = brightModels[Math.floor(Math.random() * brightModels.length)];
+          
+          // Fetch palette from Colormind API
+          const response = await fetch('http://colormind.io/api/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              model: randomModel
+            })
+          });
+          
+          if (!response.ok) {
+            throw new Error('Failed to fetch palette');
+          }
+          
+          const data = await response.json();
+          const baseColor = data.result[0]; // Use first color as base
+          
+          // Generate shades from the base color
+          const mainColor = `rgb(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]})`;
+          const darkColor = this.darkenColor(baseColor, 0.8);
+          const darkerColor = this.darkenColor(baseColor, 0.6);
+          
+          // Apply random theme - text stays white
+          this.applyRandomTheme(mainColor, darkColor, darkerColor, '#ffffff');
+          
+        } catch (error) {
+          console.error('Failed to generate random theme:', error);
+          // Fallback to manual random colors
+          this.generateFallbackTheme();
+        }
+      }
+
+      darkenColor(rgb, factor) {
+        const [r, g, b] = rgb;
+        return `rgb(${Math.floor(r * factor)}, ${Math.floor(g * factor)}, ${Math.floor(b * factor)})`;
+      }
+
+      applyRandomTheme(color1, color2, color3, textColor) {
+        const root = document.documentElement;
+        
+        // Apply CSS custom properties
+        root.style.setProperty('--blue', color1);
+        root.style.setProperty('--blue-dark', color2);
+        root.style.setProperty('--blue-darker', color3);
+        root.style.setProperty('--text', textColor);
+        
+        // Set data-theme to trigger any theme-specific styles
+        document.documentElement.setAttribute('data-theme', 'random');
+        
+        // Clear active state from theme options
+        document.querySelectorAll('.theme-option').forEach(option => {
+          option.classList.remove('active');
+        });
+        
+        // Highlight shuffle button briefly
+        const shuffleButton = document.getElementById('shuffle-theme');
+        shuffleButton.style.background = 'rgba(255, 255, 255, 0.4)';
+        setTimeout(() => {
+          shuffleButton.style.background = 'rgba(255, 255, 255, 0.1)';
+        }, 300);
+      }
+
+      generateFallbackTheme() {
+        // Fallback bright, fun colors if API fails
+        const hue = Math.floor(Math.random() * 360);
+        const saturation = 70 + Math.floor(Math.random() * 25); // 70-95% for vibrancy
+        const lightness = 45 + Math.floor(Math.random() * 15); // 45-60% for brightness
+        
+        const color1 = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+        const color2 = `hsl(${hue}, ${saturation}%, ${Math.max(lightness - 15, 25)}%)`;
+        const color3 = `hsl(${hue}, ${saturation}%, ${Math.max(lightness - 25, 15)}%)`;
+        
+        this.applyRandomTheme(color1, color2, color3, '#ffffff');
+      }
+    }
+
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      new WaitlistPage();
+    });
+  </script>
+</body>
+</html>
