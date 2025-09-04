@@ -769,7 +769,7 @@ body::before {
 }
 
 .form-title {
-  font-size: clamp(32px, 8vw, 60px);
+  font-size: clamp(28px, 6vw, 50px);
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.03em;
@@ -949,7 +949,7 @@ body::before {
   display: flex;
   justify-content: center;
   margin: 0 0 30px 0;
-  max-width: 300px;
+  max-width: 400px;
   margin-left: auto;
   margin-right: auto;
 }
