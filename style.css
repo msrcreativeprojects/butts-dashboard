@@ -81,7 +81,7 @@ body {
 
 .comparison-section {
   background: var(--blue-dark);
-  padding: 80px 40px;
+  padding: 80px clamp(20px, 5vw, 40px);
 }
 
 .comparison-header {
@@ -190,24 +190,122 @@ body {
 
 .metadata {
   background: var(--blue-darker);
-  padding: 40px;
-  font-size: 1rem;
-  text-align: center;
+  padding: 60px clamp(20px, 5vw, 40px) 40px;
+  font-family: "Inter", -apple-system, system-ui, sans-serif;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px 0 30px 20px;
+}
+
+.logo-star {
+  font-size: 3rem;
+  color: var(--text);
+  opacity: 0.8;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+  line-height: 1;
+  animation: spinAndBreathe 20s linear infinite;
+}
+
+.logo-star:hover {
+  opacity: 1;
+}
+
+@keyframes spinAndBreathe {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  12.5% {
+    transform: rotate(45deg) scale(1.05);
+  }
+  25% {
+    transform: rotate(90deg) scale(1);
+  }
+  37.5% {
+    transform: rotate(135deg) scale(1.05);
+  }
+  50% {
+    transform: rotate(180deg) scale(1);
+  }
+  62.5% {
+    transform: rotate(225deg) scale(1.05);
+  }
+  75% {
+    transform: rotate(270deg) scale(1);
+  }
+  87.5% {
+    transform: rotate(315deg) scale(1.05);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+.data-source-tag {
+  position: absolute;
+  bottom: 20px;
+  right: clamp(20px, 5vw, 40px);
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  opacity: 0.6;
+  text-transform: uppercase;
+}
+
+.data-source-tag a {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 4px;
+  transition: opacity 0.2s ease;
+}
+
+.data-source-tag a:hover {
   opacity: 0.8;
 }
 
-.metadata a {
-  color: inherit;
-  text-decoration: none;
-  font-weight: 700;
-}
-
+/* Keep theme toggle styles for functionality */
 #theme-toggle {
   cursor: pointer;
-  background: transparent;
-  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: inherit;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+#theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .metadata {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
 }
 
 .error {
