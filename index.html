@@ -54,11 +54,7 @@
         <div class="theme-option" data-theme="blue" title="Blue"></div>
         <div class="theme-option" data-theme="green" title="Green"></div>
         <div class="theme-option" data-theme="pink" title="Pink"></div>
-        <div class="theme-option" data-theme="white" title="White"></div>
-        <div class="theme-option" data-theme="black" title="Black"></div>
-        <div class="theme-option theme-image" data-theme="curtain" title="Red Velvet Curtain"></div>
-        <div class="theme-option theme-image" data-theme="marquee" title="Marquee Lights"></div>
-        <div class="theme-option theme-image" data-theme="audience" title="Audience"></div>
+        <button id="shuffle-theme" class="shuffle-button" title="Random Color">✦</button>
       </div>
       
       <!-- Share button - positioned differently on desktop vs mobile -->
@@ -101,6 +97,7 @@
         this.setupShareButton();
         this.setupViewportTracker();
         this.setupDebugInfo();
+        this.setupShuffleTheme();
       }
 
       setupViewportTracker() {
@@ -166,6 +163,102 @@
           window.addEventListener('resize', updateDebugInfo);
           document.body.appendChild(debugPanel);
         }
+      }
+
+      setupShuffleTheme() {
+        const shuffleButton = document.getElementById('shuffle-theme');
+        shuffleButton.addEventListener('click', () => {
+          this.generateRandomTheme();
+        });
+      }
+
+      async generateRandomTheme() {
+        try {
+          // Use bright, fun models that generate beautiful colors
+          const brightModels = ['flower_photography', 'sunset', 'ui', 'default'];
+          const randomModel = brightModels[Math.floor(Math.random() * brightModels.length)];
+          
+          // Fetch palette from Colormind API
+          const response = await fetch('http://colormind.io/api/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              model: randomModel
+            })
+          });
+          
+          if (!response.ok) {
+            throw new Error('Failed to fetch palette');
+          }
+          
+          const data = await response.json();
+          const baseColor = data.result[0]; // Use first color as base
+          
+          // Generate shades from the base color
+          const mainColor = `rgb(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]})`;
+          const darkColor = this.darkenColor(baseColor, 0.8);
+          const darkerColor = this.darkenColor(baseColor, 0.6);
+          
+          // Apply random theme - text stays white
+          this.applyRandomTheme(mainColor, darkColor, darkerColor, '#ffffff');
+          
+        } catch (error) {
+          console.error('Failed to generate random theme:', error);
+          // Fallback to manual random colors
+          this.generateFallbackTheme();
+        }
+      }
+
+      darkenColor(rgb, factor) {
+        const [r, g, b] = rgb;
+        return `rgb(${Math.floor(r * factor)}, ${Math.floor(g * factor)}, ${Math.floor(b * factor)})`;
+      }
+
+      getContrastColor(rgb) {
+        // Calculate luminance
+        const [r, g, b] = rgb;
+        const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        return luminance > 0.5 ? '#000000' : '#ffffff';
+      }
+
+      applyRandomTheme(color1, color2, color3, textColor) {
+        const root = document.documentElement;
+        
+        // Apply CSS custom properties
+        root.style.setProperty('--blue', color1);
+        root.style.setProperty('--blue-dark', color2);
+        root.style.setProperty('--blue-darker', color3);
+        root.style.setProperty('--text', textColor);
+        
+        // Set data-theme to trigger any theme-specific styles
+        document.documentElement.setAttribute('data-theme', 'random');
+        
+        // Clear active state from theme options
+        document.querySelectorAll('.theme-option').forEach(option => {
+          option.classList.remove('active');
+        });
+        
+        // Highlight shuffle button briefly
+        const shuffleButton = document.getElementById('shuffle-theme');
+        shuffleButton.style.background = 'rgba(255, 255, 255, 0.4)';
+        setTimeout(() => {
+          shuffleButton.style.background = 'rgba(255, 255, 255, 0.1)';
+        }, 300);
+      }
+
+      generateFallbackTheme() {
+        // Fallback bright, fun colors if API fails
+        const hue = Math.floor(Math.random() * 360);
+        const saturation = 70 + Math.floor(Math.random() * 25); // 70-95% for vibrancy
+        const lightness = 45 + Math.floor(Math.random() * 15); // 45-60% for brightness
+        
+        const color1 = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+        const color2 = `hsl(${hue}, ${saturation}%, ${Math.max(lightness - 15, 25)}%)`;
+        const color3 = `hsl(${hue}, ${saturation}%, ${Math.max(lightness - 25, 15)}%)`;
+        
+        this.applyRandomTheme(color1, color2, color3, '#ffffff');
       }
 
       async loadCurrentData() {
@@ -463,9 +556,13 @@
         const root = document.documentElement;
         const themeOptions = document.querySelectorAll('.theme-option');
         
-        // Load saved theme or default to blue
+        // Get available themes from the DOM
+        const availableThemes = Array.from(themeOptions).map(option => option.dataset.theme);
+        
+        // Load saved theme or default to blue, but ensure it's valid
         const savedTheme = localStorage.getItem("theme") || "blue";
-        root.setAttribute("data-theme", savedTheme);
+        const validTheme = availableThemes.includes(savedTheme) ? savedTheme : "blue";
+        root.setAttribute("data-theme", validTheme);
         
         // Set active state for current theme
         const updateActiveTheme = (activeTheme) => {
@@ -474,12 +571,20 @@
           });
         };
         
-        updateActiveTheme(savedTheme);
+        updateActiveTheme(validTheme);
         
         // Add click handlers for theme options
         themeOptions.forEach(option => {
           option.addEventListener('click', () => {
             const newTheme = option.dataset.theme;
+            
+            // Clear any custom CSS properties from random themes
+            root.style.removeProperty('--blue');
+            root.style.removeProperty('--blue-dark');
+            root.style.removeProperty('--blue-darker');
+            root.style.removeProperty('--text');
+            
+            // Set the theme
             root.setAttribute("data-theme", newTheme);
             localStorage.setItem("theme", newTheme);
             updateActiveTheme(newTheme);
