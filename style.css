@@ -982,6 +982,19 @@ body::before {
   .waitlist-header {
     margin-bottom: 40px;
   }
+  
+  .submit-btn {
+    width: auto;
+    min-width: 200px;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .submit-btn {
+    width: 100%;
+    min-width: auto;
+  }
 }
 
 .sr-only {
