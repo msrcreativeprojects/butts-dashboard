@@ -43,7 +43,7 @@
             <p class="form-description">Add your butts to the Broadway attendance count</p>
           </div>
           
-          <form id="waitlist-form" class="native-form">
+          <form id="waitlist-form" class="native-form" netlify data-netlify="true" name="waitlist">
             <div class="form-group">
               <label for="name">NAME</label>
               <input type="text" id="name" name="name" required>
@@ -65,11 +65,8 @@
             </div>
             
             <button type="submit" class="submit-btn">
-              <span class="btn-text">JOIN THE COUNT</span>
-              <div class="btn-loading" style="display: none;">✦</div>
+              JOIN THE COUNT
             </button>
-            
-            <div id="form-message" class="form-message" style="display: none;"></div>
           </form>
         </div>
         
@@ -94,7 +91,6 @@
       }
 
       async init() {
-        this.setupFormSubmission();
         this.hideLoadingScreen();
       }
 
@@ -237,71 +233,6 @@
         this.applyRandomTheme(color1, color2, color3, '#ffffff');
       }
 
-      setupFormSubmission() {
-        const form = document.getElementById('waitlist-form');
-        const submitBtn = form.querySelector('.submit-btn');
-        const btnText = submitBtn.querySelector('.btn-text');
-        const btnLoading = submitBtn.querySelector('.btn-loading');
-        const messageDiv = document.getElementById('form-message');
-
-        form.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          
-          // Show loading state
-          btnText.style.display = 'none';
-          btnLoading.style.display = 'block';
-          submitBtn.disabled = true;
-          
-          // Get form data
-          const formData = new FormData(form);
-          const data = {
-            "CONTACT NAME": formData.get('name'),
-            "CONTACT EMAIL": formData.get('work_email'),
-            "NAME": formData.get('org_name'),
-            "CITY/REGION": formData.get('city_region'),
-            "Submitted At": new Date().toISOString()
-          };
-
-          try {
-            // Submit to secure Netlify function
-            const response = await fetch('/.netlify/functions/submit-waitlist', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                name: formData.get('name'),
-                work_email: formData.get('work_email'),
-                org_name: formData.get('org_name'),
-                city_region: formData.get('city_region')
-              })
-            });
-
-            const result = await response.json();
-
-            if (response.ok && result.success) {
-              // Success
-              messageDiv.textContent = 'Welcome to the waitlist! We\'ll be in touch soon.';
-              messageDiv.className = 'form-message success';
-              messageDiv.style.display = 'block';
-              form.reset();
-            } else {
-              throw new Error(result.error || 'Submission failed');
-            }
-
-          } catch (error) {
-            // Error
-            messageDiv.textContent = error.message || 'Something went wrong. Please try again.';
-            messageDiv.className = 'form-message error';
-            messageDiv.style.display = 'block';
-          }
-
-          // Reset button state
-          btnText.style.display = 'block';
-          btnLoading.style.display = 'none';
-          submitBtn.disabled = false;
-        });
-      }
     }
 
     // Initialize when DOM is loaded
