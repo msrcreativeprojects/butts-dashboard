@@ -61,6 +61,10 @@ body {
   opacity: 1;
 }
 
+.no-wrap {
+  white-space: nowrap;
+}
+
 .intro-muted { opacity: 0.7; }
 .intro-shows { color: #fff; }
 .shows-label { line-height: 1; }
