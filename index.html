@@ -82,10 +82,10 @@
 
           document.getElementById("intro-text").innerHTML =
             `<span class="intro-faded">LAST WEEK THERE WERE</span> ` +
-            `<span class="intro-highlight">${data.showCount.toLocaleString()} SHOWS</span> ` +
+            `<span class="intro-highlight"><span class="no-wrap">${data.showCount.toLocaleString()}&nbsp;SHOWS</span></span> ` +
             `<span class="intro-faded">RUNNING AND</span> ` +
             `<span class="intro-highlight">${data.attendance.toLocaleString()}</span> ` +
-            `<span class="intro-faded">BUTTS IN SEATS</span>`;
+            `<span class="intro-faded"><span class="no-wrap">BUTTS&nbsp;IN&nbsp;SEATS</span></span>`;
 
           
 
@@ -127,10 +127,10 @@
 
         document.getElementById("intro-text").innerHTML =
           `<span class="intro-faded">LAST WEEK THERE WERE</span> ` +
-          `<span class="intro-highlight">${mockData.showCount.toLocaleString()} SHOWS</span> ` +
+          `<span class="intro-highlight"><span class="no-wrap">${mockData.showCount.toLocaleString()}&nbsp;SHOWS</span></span> ` +
           `<span class="intro-faded">RUNNING AND</span> ` +
           `<span class="intro-highlight">${mockData.attendance.toLocaleString()}</span> ` +
-          `<span class="intro-faded">BUTTS IN SEATS</span>`;
+          `<span class="intro-faded"><span class="no-wrap">BUTTS&nbsp;IN&nbsp;SEATS</span></span>`;
         
 
         document.getElementById("week-ending").textContent =
