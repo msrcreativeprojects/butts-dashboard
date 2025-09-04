@@ -197,23 +197,6 @@ body {
   font-size: 1.5rem;
 }
 
-.loading {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--blue);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: clamp(2rem, 6vw, 6rem);
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.03em;
-  text-align: center;
-}
-
 .error {
   background: #fff;
   color: var(--blue);

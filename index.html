@@ -14,10 +14,9 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="loading" class="loading">DRUMROLL</div>
   <div id="error" class="error" hidden></div>
 
-  <div id="dashboard" hidden>
+  <div id="dashboard">
     <div class="main-screen">
       <section class="data-section">
         <p id="intro-text" class="intro-text"></p>
@@ -107,9 +106,6 @@
             "Week ending: " + data.weekEnding;
           document.getElementById("last-updated").textContent =
             "Last updated: " + data.lastUpdated;
-
-          document.getElementById("loading").remove();
-          document.getElementById("dashboard").hidden = false;
         } catch (err) {
           // Fallback to mock data if the API fails or times out
           console.log("API failed or timed out, using mock data:", err);
@@ -156,9 +152,6 @@
           "Week ending: " + mockData.weekEnding;
         document.getElementById("last-updated").textContent =
           "Last updated: " + mockData.lastUpdated;
-
-        document.getElementById("loading").remove();
-        document.getElementById("dashboard").hidden = false;
       }
 
       setupYearSelector() {
@@ -304,7 +297,6 @@
       }
 
       showError(message) {
-        document.getElementById("loading").remove();
         const err = document.getElementById("error");
         err.textContent = message;
         err.hidden = false;
