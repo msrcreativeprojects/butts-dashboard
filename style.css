@@ -671,6 +671,7 @@ body::before {
   /* Mobile: Left-align CTA under color picker */
   .footer-left {
     justify-content: flex-start;
+    margin-top: 12px;
   }
   
   .waitlist-cta {
