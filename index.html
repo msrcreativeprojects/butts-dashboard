@@ -22,12 +22,6 @@
       <section class="data-section">
         <p id="intro-text" class="intro-text"></p>
 
-        <div class="main-stats">
-          <div class="stat-item">
-            <p id="attendance" class="stat-number">-</p>
-            <p class="stat-label">BUTTS IN SEATS</p>
-          </div>
-        </div>
       </section>
     </div>
 
@@ -50,12 +44,6 @@
       
 
 
-      <div class="historical-stats">
-        <div class="historical-stat">
-          <p id="historical-attendance" class="historical-number">-</p>
-          <p class="historical-label">BUTTS IN SEATS</p>
-        </div>
-      </div>
     </section>
 
     <footer class="metadata">
@@ -91,9 +79,6 @@
         try {
           const res = await fetch("/.netlify/functions/broadway-data");
           const data = await res.json();
-
-          document.getElementById("attendance").textContent =
-            data.attendance.toLocaleString();
 
           document.getElementById("intro-text").innerHTML =
             `<span class="intro-faded">LAST WEEK THERE WERE</span> ` +
@@ -139,9 +124,6 @@
             timeZone: 'America/New_York'
           })
         };
-
-        document.getElementById("attendance").textContent =
-          mockData.attendance.toLocaleString();
 
         document.getElementById("intro-text").innerHTML =
           `<span class="intro-faded">LAST WEEK THERE WERE</span> ` +
@@ -215,8 +197,6 @@
           );
           const data = await res.json();
 
-          document.getElementById("historical-attendance").textContent =
-            data.attendance.toLocaleString();
           document.getElementById("historical-shows-display").textContent =
             data.showCount.toLocaleString();
         } catch (err) {
@@ -276,8 +256,6 @@
 
         console.log("Mock data calculated:", mockData);
 
-        document.getElementById("historical-attendance").textContent =
-          mockData.attendance.toLocaleString();
         document.getElementById("historical-shows-display").textContent =
           mockData.showCount.toLocaleString();
 
