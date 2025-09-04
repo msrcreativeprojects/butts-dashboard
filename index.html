@@ -90,6 +90,7 @@
         this.setupYearSelector();
         this.setupThemeToggle();
         this.setupViewportTracker();
+        this.setupDebugInfo();
       }
 
       setupViewportTracker() {
@@ -111,6 +112,50 @@
         } else {
           // Hide on production
           widthElement.style.display = 'none';
+        }
+      }
+
+      setupDebugInfo() {
+        // Add debug info for local development
+        const isLocal = location.hostname === 'localhost' || 
+                       location.hostname === '127.0.0.1' || 
+                       location.port !== '';
+        
+        if (isLocal) {
+          const debugPanel = document.createElement('div');
+          debugPanel.id = 'debug-panel';
+          debugPanel.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 999;
+            backdrop-filter: blur(8px);
+            line-height: 1.4;
+          `;
+          
+          const updateDebugInfo = () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const attendanceEl = document.getElementById("attendance-number");
+            const attendanceSize = attendanceEl ? window.getComputedStyle(attendanceEl).fontSize : 'N/A';
+            
+            debugPanel.innerHTML = `
+              Viewport: ${width} × ${height}px<br>
+              Attendance font: ${attendanceSize}<br>
+              12vh = ${Math.round(height * 0.12)}px<br>
+              2vh = ${Math.round(height * 0.02)}px
+            `;
+          };
+          
+          updateDebugInfo();
+          window.addEventListener('resize', updateDebugInfo);
+          document.body.appendChild(debugPanel);
         }
       }
 
@@ -153,11 +198,146 @@
           `<span class="intro-faded">THERE WERE</span><br>` +
           `<span class="intro-highlight no-wrap">${data.showCount.toLocaleString()} SHOWS</span><br>` +
           `<span class="intro-faded">RUNNING AND</span><br>` +
-          `<span class="intro-highlight attendance-large">${this.formatAttendance(data.attendance)}</span><br>` +
+          `<span class="intro-highlight attendance-large" id="attendance-number">000000</span><br>` +
           `<span class="intro-faded no-wrap">BUTTS IN SEATS</span>`;
 
         document.getElementById("week-ending").textContent = data.weekEnding;
         document.getElementById("last-updated").textContent = data.lastUpdated;
+        
+        // Animate the attendance number
+        this.animateAttendanceNumber(data.attendance);
+      }
+
+      animateAttendanceNumber(finalNumber) {
+        const element = document.getElementById("attendance-number");
+        const finalString = this.formatAttendance(finalNumber);
+        const duration = 2000; // 2 seconds
+        const updateInterval = 120; // Update every 120ms for crisp posterized effect
+        
+        // Find all digit positions
+        const digitPositions = [];
+        for (let i = 0; i < finalString.length; i++) {
+          if (finalString[i].match(/\d/)) {
+            digitPositions.push(i);
+          }
+        }
+        
+        const totalDigits = digitPositions.length;
+        const stepsPerDigit = Math.ceil(duration / (updateInterval * totalDigits));
+        let currentStep = 0;
+        let lockedDigitCount = 0;
+        
+        const animate = () => {
+          currentStep++;
+          
+          // Determine which digit should lock next
+          const digitToLock = Math.floor((currentStep - 1) / stepsPerDigit);
+          if (digitToLock > lockedDigitCount - 1 && lockedDigitCount < totalDigits) {
+            lockedDigitCount = digitToLock + 1;
+          }
+          
+          let displayNumber = '';
+          let digitIndex = 0;
+          
+          for (let i = 0; i < finalString.length; i++) {
+            if (finalString[i].match(/\d/)) {
+              if (digitIndex < lockedDigitCount) {
+                // Digit is locked - show correct value
+                displayNumber += finalString[i];
+              } else {
+                // Digit is still scrambling
+                displayNumber += Math.floor(Math.random() * 10);
+              }
+              digitIndex++;
+            } else {
+              // Keep non-digit characters as is
+              displayNumber += finalString[i];
+            }
+          }
+          
+          element.textContent = displayNumber;
+          
+          // Continue animation until all digits are locked
+          if (lockedDigitCount < totalDigits) {
+            setTimeout(animate, updateInterval);
+          } else {
+            // Final frame - ensure we show the actual number
+            element.textContent = finalString;
+            // Trigger celebration!
+            this.celebrateNumberReveal();
+          }
+        };
+        
+        // Start the animation
+        setTimeout(animate, updateInterval);
+      }
+      
+      easeOutQuart(t) {
+        return 1 - Math.pow(1 - t, 4);
+      }
+
+      celebrateNumberReveal() {
+        // Celebration disabled for now - uncomment to re-enable:
+        // this.showCelebrationGif();
+      }
+
+      showCelebrationGif() {
+        // Array of The Office celebration GIFs
+        const celebrationGifs = [
+          'https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif', // Michael "YES!" 
+          'https://media.giphy.com/media/yUI3a7RwLhOFy/giphy.gif', // Jim fist pump
+          'https://media.giphy.com/media/g9582DNuQppxC/giphy.gif', // Michael party dancing
+          'https://media.giphy.com/media/3ohzdIuqJoo8QdKlnW/giphy.gif', // Dwight celebrating
+          'https://media.giphy.com/media/l1ughbsd9qXz2s9SE/giphy.gif', // Kevin dancing
+          'https://media.giphy.com/media/8VrtCswiLDNnO/giphy.gif', // Pam cheering
+          'https://media.giphy.com/media/IwAZ6dvvvaTtdI8SD5/giphy.gif', // Office party dancing
+          'https://media.giphy.com/media/BYhoMtJMQsYVy/giphy.gif' // Michael celebrating
+        ];
+        
+        const randomGif = celebrationGifs[Math.floor(Math.random() * celebrationGifs.length)];
+        
+        // Create GIF overlay
+        const gifOverlay = document.createElement('div');
+        gifOverlay.className = 'celebration-gif-overlay';
+        
+        const gifImg = document.createElement('img');
+        gifImg.src = randomGif;
+        gifImg.className = 'celebration-gif';
+        gifImg.alt = 'YES! Celebration!';
+        
+        gifOverlay.appendChild(gifImg);
+        
+        gifOverlay.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          pointer-events: none;
+          z-index: 1000;
+          opacity: 0;
+          animation: gifCelebration 2.5s ease-out forwards;
+        `;
+        
+        gifImg.style.cssText = `
+          width: 350px;
+          height: 350px;
+          object-fit: cover;
+          box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+          transform: scale(0.8);
+        `;
+        
+        document.body.appendChild(gifOverlay);
+        
+        // Remove after animation
+        setTimeout(() => {
+          if (gifOverlay.parentElement) {
+            gifOverlay.parentElement.removeChild(gifOverlay);
+          }
+        }, 2500);
       }
 
       setupYearSelector() {
@@ -243,33 +423,23 @@
           const sampleData = this.getLocalHistoricalSample(year);
           
           document.getElementById("historical-shows-display").textContent =
-            sampleData.showCount.toLocaleString() + " SHOWS";
+            sampleData.showCount === "—" ? "— SHOWS" : sampleData.showCount.toLocaleString() + " SHOWS";
           document.getElementById("historical-attendance-display").textContent =
-            this.formatAttendance(sampleData.attendance);
+            sampleData.attendance === "—" ? "—" : this.formatAttendance(sampleData.attendance);
         }
       }
 
       getLocalHistoricalSample(year) {
-        // Sample data based on real Broadway League historical data for local preview
+        // Only real data - no made-up samples
         // Production uses real API calls to broadway-historical function
         const samples = {
-          1996: { showCount: 21, attendance: 142775 },
-          2000: { showCount: 28, attendance: 165234 }, 
-          2005: { showCount: 26, attendance: 184567 },
-          2010: { showCount: 22, attendance: 189021 },
-          2015: { showCount: 29, attendance: 201456 },
           2016: { showCount: 29, attendance: 109724 }, // Real CSV data
-          2017: { showCount: 28, attendance: 184399 },
+          2017: { showCount: 28, attendance: 184399 }, // Real CSV data
           2018: { showCount: 30, attendance: 127459 }, // Real CSV data
           2019: { showCount: 31, attendance: 148857 }, // Real CSV data  
-          2020: { showCount: 15, attendance: 98432 },  // COVID impact
-          2021: { showCount: 18, attendance: 123567 },
-          2022: { showCount: 25, attendance: 187234 },
-          2023: { showCount: 23, attendance: 209122 }, // Real BroadwayWorld data
-          2024: { showCount: 26, attendance: 220582 }  // Real BroadwayWorld data
         };
         
-        return samples[year] || { showCount: 24, attendance: 175000 };
+        return samples[year] || { showCount: "—", attendance: "—" };
       }
 
 
