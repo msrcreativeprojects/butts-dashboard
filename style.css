@@ -760,7 +760,7 @@ body::before {
 .native-form-container {
   max-width: 600px;
   margin: 0 auto;
-  padding: 160px 40px 120px 40px;
+  padding: 180px 40px 120px 40px;
 }
 
 .form-header {
