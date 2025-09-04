@@ -22,14 +22,13 @@ exports.handler = async (event, context) => {
       }
     }
 
-    // Prepare data for Airtable
+    // Prepare data for Airtable - only using fields that exist
     const airtableData = {
       "fields": {
         "Contact Name": data.name.trim(),
         "Contact Email": data.work_email.trim(),
         "Name": data.org_name.trim(),
-        "City/Region": data.city_region.trim(),
-        "Submitted At": new Date().toISOString()
+        "City/Region": data.city_region.trim()
       }
     };
 
