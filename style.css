@@ -255,7 +255,7 @@ body::before {
 
 .metadata {
   background: var(--blue-darker);
-  padding: 60px clamp(20px, 5vw, 40px) 40px;
+  padding: 40px clamp(20px, 5vw, 40px);
   font-family: "Inter", -apple-system, system-ui, sans-serif;
   display: grid;
   grid-template-columns: auto 1fr;
@@ -525,6 +525,7 @@ body::before {
   .metadata {
     grid-template-columns: 1fr;
     gap: 24px;
+    padding: 80px clamp(20px, 5vw, 40px) 60px;
   }
   
   .footer-logo {
@@ -564,27 +565,27 @@ body::before {
   }
   
   
-  /* Mobile: Stack attributions in bottom left */
+  /* Mobile: Stack attributions in bottom center */
   .fourth-wall-attribution {
     position: absolute;
     top: auto;
-    left: clamp(20px, 5vw, 40px);
+    bottom: 32.5px;
+    left: 50%;
     right: auto;
-    bottom: 40px;
-    transform: none;
-    text-align: left;
-    font-size: 0.6rem;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 0.65rem;
   }
   
   .data-source-tag {
     position: absolute;
-    bottom: 10px;
-    left: clamp(20px, 5vw, 40px);
-    right: auto;
     top: auto;
-    transform: none;
-    text-align: left;
-    font-size: 0.6rem;
+    bottom: 20px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 0.65rem;
   }
 }
 
