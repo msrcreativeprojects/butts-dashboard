@@ -849,7 +849,7 @@ body::before {
   -webkit-backdrop-filter: blur(4px);
   cursor: pointer;
   font-family: "Inter", -apple-system, system-ui, sans-serif;
-  margin: 30px auto 0;
+  margin: 15px auto 0;
   display: block;
 }
 
