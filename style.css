@@ -949,15 +949,17 @@ body::before {
   opacity: 1;
 }
 
-.success-gif {
-  text-align: center;
+.gif-container {
+  display: flex;
+  justify-content: center;
   margin: 0 0 30px 0;
 }
 
-.success-gif > div {
-  display: inline-block;
-  max-width: 400px;
-  width: 100%;
+.gif-wrapper {
+  width: 400px;
+  height: 224px;
+  position: relative;
+  background: transparent;
 }
 
 .success-actions {
