@@ -837,31 +837,22 @@ body::before {
   width: auto;
   padding: 16px 32px;
   font-size: 16px;
-  font-weight: 900;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  color: var(--blue);
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  border: none;
-  border-radius: 50px;
+  letter-spacing: 0.05em;
+  color: var(--text);
+  background: none;
+  border: 2px solid var(--text);
+  border-radius: 4px;
   cursor: pointer;
-  transition: all 0.15s ease;
   font-family: "Inter", -apple-system, system-ui, sans-serif;
-  margin-top: 30px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin: 30px auto 0;
+  display: block;
 }
 
 .submit-btn:hover {
-  background: #ffffff;
-  color: var(--blue-dark);
-}
-
-.submit-btn:active {
-  background: #f0f0f0;
-  transition: none;
+  background: var(--text);
+  color: var(--blue);
 }
 
 .btn-loading {
