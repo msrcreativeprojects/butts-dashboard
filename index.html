@@ -16,18 +16,12 @@
 <body>
   <div id="error" class="error" hidden></div>
 
+  <div id="viewport-display" style="position: fixed; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; z-index: 1000; font-family: monospace;"></div>
+
   <div id="dashboard">
     <div class="main-screen">
       <section class="data-section">
         <p id="intro-text" class="intro-text"></p>
-        
-        <!-- Share button in bottom right of data section -->
-        <button id="share-button" class="share-button" title="Share to Instagram Story">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M7 17L17 7"/>
-            <path d="M7 7h10v10"/>
-          </svg>
-        </button>
       </section>
     </div>
 
@@ -56,17 +50,6 @@
     </section>
 
     <footer class="metadata">
-      <div class="footer-logo">
-        <a
-          href="http://fourthwall.news"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Fourth Wall Project"
-          class="logo-star"
-        >
-          ✦
-        </a>
-      </div>
       <div class="theme-selector">
         <div class="theme-option" data-theme="blue" title="Blue"></div>
         <div class="theme-option" data-theme="green" title="Green"></div>
@@ -74,22 +57,28 @@
         <div class="theme-option" data-theme="white" title="White"></div>
         <div class="theme-option" data-theme="black" title="Black"></div>
       </div>
+      
+      <!-- Share button - positioned differently on desktop vs mobile -->
+      <button id="share-button" class="share-button" title="Share to Instagram Story">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M7 17L17 7"/>
+          <path d="M7 7h10v10"/>
+        </svg>
+      </button>
+      
       <button id="preview-button" class="preview-button" title="Preview Share Image">
         👁️
       </button>
-      <div class="data-source-tag">
-        Data: <a
-          href="https://www.broadwayworld.com/grosses.cfm"
-          target="_blank"
-          rel="noopener noreferrer"
-          >BroadwayWorld</a
-        >
+      <div class="fourth-wall-attribution" style="opacity: 0.8;">
+        A <a href="http://fourthwall.news" target="_blank" rel="noopener noreferrer"><strong>Fourth Wall</strong></a> Project
+      </div>
+      <div class="data-source-tag" style="opacity: 0.6;">
+        Data: <a href="https://www.broadwayworld.com/grosses.cfm" target="_blank" rel="noopener noreferrer">BroadwayWorld</a>
       </div>
       <!-- Hidden elements for functionality -->
       <div style="display: none;">
         <span id="week-ending">-</span>
         <span id="last-updated">-</span>
-        <span id="viewport-width">Width: -</span>
         <button id="theme-toggle" aria-label="Toggle dark theme">🌓</button>
       </div>
     </footer>
@@ -112,7 +101,7 @@
       }
 
       setupViewportTracker() {
-        const widthElement = document.getElementById("viewport-width");
+        const widthElement = document.getElementById("viewport-display");
         
         // Only show viewport width in local development
         const isLocal = location.hostname === 'localhost' || 
@@ -139,7 +128,7 @@
                        location.hostname === '127.0.0.1' || 
                        location.port !== '';
         
-        if (isLocal) {
+        if (false) { // Debug panel disabled
           const debugPanel = document.createElement('div');
           debugPanel.id = 'debug-panel';
           debugPanel.style.cssText = `
@@ -164,7 +153,6 @@
             const attendanceSize = attendanceEl ? window.getComputedStyle(attendanceEl).fontSize : 'N/A';
             
             debugPanel.innerHTML = `
-              Viewport: ${width} × ${height}px<br>
               Attendance font: ${attendanceSize}<br>
               12vh = ${Math.round(height * 0.12)}px<br>
               2vh = ${Math.round(height * 0.02)}px
@@ -534,9 +522,9 @@
         
         // Convert canvas to blob and download/share
         canvas.toBlob((blob) => {
-          if (navigator.share && navigator.canShare && navigator.canShare({ files: [new File([blob], 'broadway-attendance.png', { type: 'image/png' })] })) {
+          if (navigator.share && navigator.canShare && navigator.canShare({ files: [new File([blob], 'broadway-attendance.jpg', { type: 'image/jpeg' })] })) {
             // Use Web Share API if available (mobile)
-            const file = new File([blob], 'broadway-attendance.png', { type: 'image/png' });
+            const file = new File([blob], 'broadway-attendance.jpg', { type: 'image/jpeg' });
             navigator.share({
               title: 'Broadway Attendance',
               text: `Last week there were ${showCount} shows running and ${attendance} butts in seats!`,
@@ -547,13 +535,13 @@
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = 'broadway-attendance.png';
+            link.download = 'broadway-attendance.jpg';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
           }
-        }, 'image/png');
+        }, 'image/jpeg', 0.95);
       }
 
       previewShareImage() {
