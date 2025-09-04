@@ -950,15 +950,14 @@ body::before {
 }
 
 .success-gif {
-  display: flex;
-  justify-content: center;
-  margin: 0 auto 30px auto;
-  max-width: 400px;
+  text-align: center;
+  margin: 0 0 30px 0;
 }
 
 .success-gif > div {
-  width: 100% !important;
-  margin: 0 auto;
+  display: inline-block;
+  max-width: 400px;
+  width: 100%;
 }
 
 .success-actions {
