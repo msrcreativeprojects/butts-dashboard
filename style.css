@@ -769,12 +769,12 @@ body::before {
 }
 
 .form-title {
-  font-size: clamp(60px, 15vw, 120px);
+  font-size: clamp(40px, 10vw, 80px);
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.03em;
-  line-height: 0.85;
-  margin-bottom: 30px;
+  line-height: 0.9;
+  margin-bottom: 25px;
   color: var(--text);
 }
 
