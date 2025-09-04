@@ -28,7 +28,7 @@ exports.handler = async (event, context) => {
     let historicalData;
 
     // Check if we have data in our GitHub dataset (2016-2019)
-    if (year >= 2016 && year <= 2019) {
+    if (parseInt(year) >= 2016 && parseInt(year) <= 2019) {
       historicalData = await getDataFromGitHubDataset(year, week);
     } else {
       // Use BroadwayWorld scraping for other years (1996-2015, 2020-2024)
@@ -68,25 +68,32 @@ async function getDataFromGitHubDataset(year, week) {
     let totalAttendance = 0;
     let showCount = 0;
     
-    // Find the week_ending column index
+    // Find the week_ending and seats_sold column indices
     const weekEndingIndex = headers.indexOf('week_ending');
     const seatsSoldIndex = headers.indexOf('seats_sold');
     
-    // Convert week number to date format (DD-MM-YY)
-    const weekEndingDate = getWeekEndingDate(year, week);
-    
+    // Find data for the matching week number and year
     for (let i = 1; i < lines.length; i++) {
       const line = lines[i];
       if (!line.trim()) continue;
       
       const values = line.split(',');
+      const lineWeekNumber = values[1]; // week_number column
       const lineWeekEnding = values[weekEndingIndex];
       
-      if (lineWeekEnding === weekEndingDate) {
-        const attendance = parseInt(values[seatsSoldIndex]) || 0;
-        if (attendance > 0) {
-          totalAttendance += attendance;
-          showCount++;
+      // Check if this row matches our target week and year
+      if (lineWeekNumber === week.toString()) {
+        // Extract year from date (DD-MM-YY format)
+        const dateParts = lineWeekEnding.split('-');
+        if (dateParts.length === 3) {
+          const rowYear = '20' + dateParts[2];
+          if (rowYear === year.toString()) {
+            const attendance = parseInt(values[seatsSoldIndex]) || 0;
+            if (attendance > 0) {
+              totalAttendance += attendance;
+              showCount++;
+            }
+          }
         }
       }
     }
@@ -130,37 +137,49 @@ async function getDataFromBroadwayWorld(year, week) {
 
 function parseBroadwayWorldData(html, year, week) {
   try {
-    let totalAttendance = 0;
-    let showCount = 0;
-
-    // Parse the BroadwayWorld weekly grosses table
-    const tableRowRegex = /<tr[^>]*>.*?<\/tr>/gs;
-    const rows = html.match(tableRowRegex) || [];
+    // Find the specific row for the requested year
+    const yearPattern = new RegExp(`<a href="[^"]*year=${year}&week=${week}">${year}</a>`);
+    const match = yearPattern.exec(html);
     
-    // BroadwayWorld shows data in table rows with specific patterns
-    for (const row of rows) {
-      // Extract numeric values from each row
-      const numberMatches = row.match(/(\d{1,3}(?:,\d{3})*)/g);
-
-      if (numberMatches && numberMatches.length >= 5) {
-        try {
-          const attendance = parseInt(numberMatches[4]?.replace(/,/g, '')) || 0;
-          if (attendance > 0) {
-            totalAttendance += attendance;
-            showCount++;
-          }
-        } catch (e) {
-          continue;
-        }
-      }
+    if (!match) {
+      throw new Error(`No data found for year ${year}, week ${week}`);
     }
-
-    if (showCount === 0) {
-      throw new Error(`No valid data found for year ${year}, week ${week}`);
+    
+    // Find the table row containing this year
+    const startIndex = match.index;
+    const rowStart = html.lastIndexOf('<TR', startIndex);
+    const rowEnd = html.indexOf('</TR>', startIndex) + 5;
+    const row = html.substring(rowStart, rowEnd);
+    
+    // Extract all table cells
+    const cellRegex = /<td[^>]*>.*?<\/td>/g;
+    const cells = row.match(cellRegex) || [];
+    
+    if (cells.length < 8) {
+      throw new Error(`Invalid table structure for year ${year}, week ${week}`);
+    }
+    
+    // Extract seats sold (index 5) and show count (index 7)
+    const seatsSoldCell = cells[5];
+    const showCountCell = cells[7];
+    
+    // Extract numeric values from the cells
+    const seatsSoldMatch = seatsSoldCell.match(/>([0-9,]+)</);
+    const showCountMatch = showCountCell.match(/>([0-9,]+)</);
+    
+    if (!seatsSoldMatch || !showCountMatch) {
+      throw new Error(`Could not parse attendance or show count for year ${year}, week ${week}`);
+    }
+    
+    const attendance = parseInt(seatsSoldMatch[1].replace(/,/g, '')) || 0;
+    const showCount = parseInt(showCountMatch[1].replace(/,/g, '')) || 0;
+    
+    if (attendance === 0 || showCount === 0) {
+      throw new Error(`Invalid data values for year ${year}, week ${week}`);
     }
 
     return {
-      attendance: totalAttendance,
+      attendance: attendance,
       year: year,
       week: week,
       context: `Real weekly data from BroadwayWorld (${year}, week ${week})`,
@@ -175,16 +194,3 @@ function parseBroadwayWorldData(html, year, week) {
   }
 }
 
-function getWeekEndingDate(year, week) {
-  // Convert year and week to a date format that matches the CSV
-  // This is a simplified conversion - you might need to adjust based on the actual CSV format
-  const startOfYear = new Date(year, 0, 1);
-  const weekEnding = new Date(startOfYear.getTime() + (week * 7 - 1) * 24 * 60 * 60 * 1000);
-  
-  // Format as DD-MM-YY
-  const day = String(weekEnding.getDate()).padStart(2, '0');
-  const month = String(weekEnding.getMonth() + 1).padStart(2, '0');
-  const shortYear = String(year).slice(-2);
-  
-  return `${day}-${month}-${shortYear}`;
-}
