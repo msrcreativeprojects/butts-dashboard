@@ -46,7 +46,9 @@ exports.handler = async (event, context) => {
     if (!airtableResponse.ok) {
       const errorData = await airtableResponse.text();
       console.error('Airtable API Error:', errorData);
-      throw new Error('Failed to submit to Airtable');
+      console.error('Response status:', airtableResponse.status);
+      console.error('Data sent:', JSON.stringify(airtableData, null, 2));
+      throw new Error(`Airtable API Error (${airtableResponse.status}): ${errorData}`);
     }
 
     const result = await airtableResponse.json();
