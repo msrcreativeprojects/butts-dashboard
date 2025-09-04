@@ -760,7 +760,7 @@ body::before {
 .native-form-container {
   max-width: 600px;
   margin: 0 auto;
-  padding: 180px 40px 120px 40px;
+  padding: 180px 40px 160px 40px;
 }
 
 .form-header {
@@ -791,7 +791,7 @@ body::before {
 .native-form {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
 }
 
 .form-group {
@@ -852,7 +852,7 @@ body::before {
   -webkit-backdrop-filter: blur(4px);
   cursor: pointer;
   font-family: "Inter", -apple-system, system-ui, sans-serif;
-  margin: 2px 0 0 0;
+  margin: -8px 0 0 0;
   width: 33.33%;
   display: block;
 }
