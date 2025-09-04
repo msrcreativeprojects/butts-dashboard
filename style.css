@@ -36,7 +36,7 @@ body {
 
 .data-section {
   flex: 1;
-  padding: 80px 40px;
+  padding: clamp(20px, 10vh, 80px) clamp(20px, 5vw, 40px);
   display: grid;
   grid-template-rows: auto 1fr auto;
   row-gap: 60px;
@@ -44,7 +44,7 @@ body {
 }
 
 .intro-text {
-  font-size: clamp(6rem, 12vw, 12rem);
+  font-size: clamp(2rem, min(10vw, 15vh), 12rem);
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.03em;
@@ -240,7 +240,7 @@ body {
 @media (max-width: 768px) {
   .data-section,
   .comparison-section {
-    padding: 60px 20px;
+    padding: clamp(20px, 8vh, 60px) clamp(12px, 5vw, 20px);
   }
 
   .year-selector {
@@ -248,7 +248,7 @@ body {
   }
 
   .intro-text {
-    font-size: clamp(3rem, 10vw, 8rem);
+    font-size: clamp(2rem, min(8vw, 12vh), 8rem);
   }
 
   .comparison-intro,
