@@ -945,6 +945,19 @@ body::before {
   opacity: 1;
 }
 
+.success-gif {
+  display: flex;
+  justify-content: center;
+  margin: 40px 0;
+}
+
+.celebration-gif {
+  width: 200px;
+  height: auto;
+  border-radius: 8px;
+  opacity: 0.9;
+}
+
 .success-actions {
   display: flex;
   gap: 20px;
