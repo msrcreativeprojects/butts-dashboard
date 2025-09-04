@@ -773,17 +773,17 @@ body::before {
 }
 
 .form-title {
-  font-size: clamp(28px, 6vw, 50px);
+  font-size: clamp(32px, 6vw, 50px);
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.03em;
   line-height: 0.9;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
   color: var(--text);
 }
 
 .form-description {
-  font-size: clamp(12px, 2.5vw, 16px);
+  font-size: clamp(14px, 2.5vw, 16px);
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.02em;
