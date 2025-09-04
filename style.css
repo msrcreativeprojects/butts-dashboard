@@ -774,7 +774,7 @@ body::before {
   text-transform: uppercase;
   letter-spacing: -0.03em;
   line-height: 0.9;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
   color: var(--text);
 }
 
