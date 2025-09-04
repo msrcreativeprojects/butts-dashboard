@@ -40,6 +40,27 @@
   --text: #ffffff;
 }
 
+[data-theme="curtain"] {
+  --blue: #8B0000;
+  --blue-dark: #660000;
+  --blue-darker: #440000;
+  --text: #ffffff;
+}
+
+[data-theme="marquee"] {
+  --blue: #1a1a1a;
+  --blue-dark: #111111;
+  --blue-darker: #000000;
+  --text: #ffffff;
+}
+
+[data-theme="audience"] {
+  --blue: #2c1810;
+  --blue-dark: #1a0f08;
+  --blue-darker: #0f0804;
+  --text: #ffffff;
+}
+
 
 * {
   margin: 0;
@@ -71,6 +92,42 @@ body::before {
   background-size: 20px 20px;
   background-repeat: repeat;
   animation: grain 8s steps(10) infinite;
+}
+
+/* Image theme backgrounds */
+[data-theme="curtain"] body::before,
+[data-theme="marquee"] body::before,
+[data-theme="audience"] body::before {
+  animation: none;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.8;
+  filter: blur(2px) brightness(0.4);
+}
+
+[data-theme="curtain"] body::before {
+  background-image: 
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)),
+    url('./assets/images/red-velvet-curtain.jpg');
+  /* Fallback color while image loads */
+  background-color: #8B0000;
+}
+
+[data-theme="marquee"] body::before {
+  background-image: 
+    linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.5)),
+    url('./assets/images/marquee-lights.jpg');
+  /* Fallback color while image loads */
+  background-color: #1a1a1a;
+}
+
+[data-theme="audience"] body::before {
+  background-image: 
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)),
+    url('./assets/images/theater-audience.jpg');
+  /* Fallback color while image loads */
+  background-color: #2c1810;
 }
 
 @keyframes grain {
@@ -359,6 +416,18 @@ body::before {
 
 .theme-option[data-theme="black"] {
   background: #000000;
+}
+
+.theme-option[data-theme="curtain"] {
+  background: linear-gradient(45deg, #8B0000, #DC143C, #A52A2A);
+}
+
+.theme-option[data-theme="marquee"] {
+  background: radial-gradient(circle, #FFD700 30%, #000000 70%);
+}
+
+.theme-option[data-theme="audience"] {
+  background: linear-gradient(180deg, #2c1810 0%, #8B4513 50%, #FFD700 100%);
 }
 
 .share-button {
