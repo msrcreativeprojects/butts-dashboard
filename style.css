@@ -668,6 +668,11 @@ body::before {
     justify-content: center;
   }
   
+  /* Mobile: Left-align CTA under color picker */
+  .footer-left {
+    justify-content: flex-start;
+  }
+  
   .waitlist-cta {
     font-size: 18px;
     padding: 12px 24px;
