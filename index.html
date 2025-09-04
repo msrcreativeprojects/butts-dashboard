@@ -84,33 +84,26 @@
           if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
           const data = await res.json();
 
-          document.getElementById("intro-text").innerHTML =
-            `<span class="intro-faded">LAST WEEK THERE WERE</span> ` +
-
-            `<span class="intro-highlight no-wrap">${data.showCount.toLocaleString()} SHOWS</span><br>` +
-            `<span class="intro-faded">RUNNING AND</span> ` +
-            `<span class="intro-highlight">${data.attendance.toLocaleString()}</span><br>` +
-            `<span class="intro-faded no-wrap">BUTTS IN SEATS</span>`;
-
-            `<span class="intro-highlight"><span class="no-wrap">${data.showCount.toLocaleString()}&nbsp;SHOWS</span></span> ` +
-            `<span class="intro-faded">RUNNING AND</span> ` +
-            `<span class="intro-highlight">${data.attendance.toLocaleString()}</span> ` +
-            `<span class="intro-faded"><span class="no-wrap">BUTTS&nbsp;IN&nbsp;SEATS</span></span>`;
- main
-
-          
-
-          
-
-          document.getElementById("week-ending").textContent =
-            "Week ending: " + data.weekEnding;
-          document.getElementById("last-updated").textContent =
-            "Last updated: " + data.lastUpdated;
+          this.updateMainDisplay(data);
         } catch (err) {
           // Fallback to mock data if the API fails or times out
           console.log("API failed or timed out, using mock data:", err);
           this.loadMockData();
         }
+      }
+
+      updateMainDisplay(data) {
+        document.getElementById("intro-text").innerHTML =
+          `<span class="intro-faded">LAST WEEK THERE WERE</span> ` +
+          `<span class="intro-highlight no-wrap">${data.showCount.toLocaleString()} SHOWS</span><br>` +
+          `<span class="intro-faded">RUNNING AND</span> ` +
+          `<span class="intro-highlight">${data.attendance.toLocaleString()}</span><br>` +
+          `<span class="intro-faded no-wrap">BUTTS IN SEATS</span>`;
+
+        document.getElementById("week-ending").textContent =
+          "Week ending: " + data.weekEnding;
+        document.getElementById("last-updated").textContent =
+          "Last updated: " + data.lastUpdated;
       }
 
       loadMockData() {
@@ -133,25 +126,7 @@
           })
         };
 
-        document.getElementById("intro-text").innerHTML =
-          `<span class="intro-faded">LAST WEEK THERE WERE</span> ` +
-
-          `<span class="intro-highlight no-wrap">${mockData.showCount.toLocaleString()} SHOWS</span><br>` +
-          `<span class="intro-faded">RUNNING AND</span> ` +
-          `<span class="intro-highlight">${mockData.attendance.toLocaleString()}</span><br>` +
-          `<span class="intro-faded no-wrap">BUTTS IN SEATS</span>`;
-
-          `<span class="intro-highlight"><span class="no-wrap">${mockData.showCount.toLocaleString()}&nbsp;SHOWS</span></span> ` +
-          `<span class="intro-faded">RUNNING AND</span> ` +
-          `<span class="intro-highlight">${mockData.attendance.toLocaleString()}</span> ` +
-          `<span class="intro-faded"><span class="no-wrap">BUTTS&nbsp;IN&nbsp;SEATS</span></span>`;
- main
-        
-
-        document.getElementById("week-ending").textContent =
-          "Week ending: " + mockData.weekEnding;
-        document.getElementById("last-updated").textContent =
-          "Last updated: " + mockData.lastUpdated;
+        this.updateMainDisplay(mockData);
       }
 
       setupYearSelector() {
