@@ -77,7 +77,12 @@
 
       async loadCurrentData() {
         try {
-          const res = await fetch("/.netlify/functions/broadway-data");
+          const fetchPromise = fetch("/.netlify/functions/broadway-data");
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Request timed out")), 5000)
+          );
+          const res = await Promise.race([fetchPromise, timeoutPromise]);
+          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
           const data = await res.json();
 
           document.getElementById("intro-text").innerHTML =
@@ -99,8 +104,8 @@
           document.getElementById("loading").remove();
           document.getElementById("dashboard").hidden = false;
         } catch (err) {
-          // Fallback to mock data for local development
-          console.log("API failed, using mock data:", err);
+          // Fallback to mock data if the API fails or times out
+          console.log("API failed or timed out, using mock data:", err);
           this.loadMockData();
         }
       }
