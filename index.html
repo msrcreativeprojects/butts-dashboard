@@ -27,17 +27,20 @@
     <section class="comparison-section">
       <div class="comparison-header">
         <p class="comparison-intro">
-          <span class="intro-faded">THIS WEEK IN </span>
-          <span id="year-display" class="year-highlight">2023</span>
-          <span class="year-controls">
-            <button class="year-btn year-up" aria-label="Previous year">▲</button>
-            <button class="year-btn year-down" aria-label="Next year">▼</button>
+          <span class="intro-faded">THIS WEEK IN</span>
+          <span class="year-dropdown">
+            <span id="year-display" class="year-highlight"> 2023</span>
+            <div id="year-dropdown-menu" class="year-dropdown-menu" hidden>
+              <!-- Years will be populated by JavaScript -->
+            </div>
           </span>
         </p>
-        <p class="shows-running-text">
-          <span id="historical-shows-display" class="shows-number">32</span>
-          <span class="shows-label">SHOWS</span>
-          <span class="intro-faded"> WERE RUNNING</span>
+        <p class="shows-running-text" id="historical-text">
+          <span class="intro-faded">THERE WERE</span> 
+          <span id="historical-shows-display" class="intro-highlight no-wrap">32 SHOWS</span><br>
+          <span class="intro-faded">RUNNING AND</span> 
+          <span id="historical-attendance-display" class="intro-highlight">217600</span><br>
+          <span class="intro-faded no-wrap">BUTTS IN SEATS</span>
         </p>
       </div>
       
@@ -48,6 +51,7 @@
     <footer class="metadata">
       <p id="week-ending">Week ending: -</p>
       <p id="last-updated">Last updated: -</p>
+      <p id="viewport-width">Width: -</p>
       <p>
         Data source:
         <a
@@ -72,6 +76,17 @@
         await this.loadCurrentData();
         this.setupYearSelector();
         this.setupThemeToggle();
+        this.setupViewportTracker();
+      }
+
+      setupViewportTracker() {
+        const updateWidth = () => {
+          const width = window.innerWidth;
+          document.getElementById("viewport-width").textContent = `Width: ${width}px`;
+        };
+        
+        updateWidth();
+        window.addEventListener('resize', updateWidth);
       }
 
       async loadCurrentData() {
@@ -92,12 +107,17 @@
         }
       }
 
+      formatAttendance(number) {
+        return number.toLocaleString().replace(/,/g, '');
+      }
+
       updateMainDisplay(data) {
         document.getElementById("intro-text").innerHTML =
-          `<span class="intro-faded">LAST WEEK THERE WERE</span> ` +
+          `<span class="intro-faded">LAST WEEK</span><br>` +
+          `<span class="intro-faded">THERE WERE</span><br>` +
           `<span class="intro-highlight no-wrap">${data.showCount.toLocaleString()} SHOWS</span><br>` +
-          `<span class="intro-faded">RUNNING AND</span> ` +
-          `<span class="intro-highlight">${data.attendance.toLocaleString()}</span><br>` +
+          `<span class="intro-faded">RUNNING AND</span><br>` +
+          `<span class="intro-highlight attendance-large">${this.formatAttendance(data.attendance)}</span><br>` +
           `<span class="intro-faded no-wrap">BUTTS IN SEATS</span>`;
 
         document.getElementById("week-ending").textContent =
@@ -131,49 +151,63 @@
 
       setupYearSelector() {
         const yearDisplay = document.getElementById("year-display");
-        const yearUpBtn = document.querySelector(".year-up");
-        const yearDownBtn = document.querySelector(".year-down");
+        const dropdownMenu = document.getElementById("year-dropdown-menu");
         
         // Set initial year (2023)
         let currentYear = 2023;
-        yearDisplay.textContent = currentYear;
+        yearDisplay.textContent = ` ${currentYear}`;
         
         // Define year range
         const minYear = 1996;
         const maxYear = 2024;
         
-        // Function to update year and button visibility
-        const updateYear = (newYear) => {
-          if (newYear >= minYear && newYear <= maxYear) {
-            currentYear = newYear;
-            yearDisplay.textContent = currentYear;
-            this.loadHistoricalData(currentYear);
-            
-            // Update button visibility
-            yearUpBtn.style.display = currentYear >= maxYear ? 'none' : 'flex';
-            yearDownBtn.style.display = currentYear <= minYear ? 'none' : 'flex';
+        // Populate dropdown with all years
+        for (let year = maxYear; year >= minYear; year--) {
+          const option = document.createElement('div');
+          option.className = 'year-option';
+          option.textContent = year;
+          if (year === currentYear) {
+            option.classList.add('selected');
           }
-        };
+          option.addEventListener('click', () => {
+            this.selectYear(year);
+          });
+          dropdownMenu.appendChild(option);
+        }
         
-        // Set up button event listeners
-        yearUpBtn.addEventListener("click", () => {
-          if (currentYear < maxYear) {
-            updateYear(currentYear + 1);
-          }
+        // Toggle dropdown on year click
+        yearDisplay.addEventListener('click', () => {
+          dropdownMenu.hidden = !dropdownMenu.hidden;
         });
         
-        yearDownBtn.addEventListener("click", () => {
-          if (currentYear > minYear) {
-            updateYear(currentYear - 1);
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.year-dropdown')) {
+            dropdownMenu.hidden = true;
           }
         });
-        
-        // Set initial button visibility
-        yearUpBtn.style.display = 'flex'; // Show up arrow initially (2023 < 2024)
-        yearDownBtn.style.display = 'flex'; // Show down arrow initially (2023 > 1996)
         
         // Load initial data
         this.loadHistoricalData(currentYear);
+      }
+
+      selectYear(year) {
+        const yearDisplay = document.getElementById("year-display");
+        const dropdownMenu = document.getElementById("year-dropdown-menu");
+        
+        // Update display
+        yearDisplay.textContent = ` ${year}`;
+        
+        // Update selected option
+        dropdownMenu.querySelectorAll('.year-option').forEach(option => {
+          option.classList.toggle('selected', parseInt(option.textContent) === year);
+        });
+        
+        // Close dropdown
+        dropdownMenu.hidden = true;
+        
+        // Load historical data for selected year
+        this.loadHistoricalData(year);
       }
 
       async loadHistoricalData(year) {
@@ -185,7 +219,9 @@
           const data = await res.json();
 
           document.getElementById("historical-shows-display").textContent =
-            data.showCount.toLocaleString();
+            data.showCount.toLocaleString() + " SHOWS";
+          document.getElementById("historical-attendance-display").textContent =
+            this.formatAttendance(data.attendance);
         } catch (err) {
           // Fallback to mock historical data
           console.log("Historical API failed, using mock data:", err);
@@ -244,7 +280,9 @@
         console.log("Mock data calculated:", mockData);
 
         document.getElementById("historical-shows-display").textContent =
-          mockData.showCount.toLocaleString();
+          mockData.showCount.toLocaleString() + " SHOWS";
+        document.getElementById("historical-attendance-display").textContent =
+          this.formatAttendance(mockData.attendance);
 
         console.log("Historical data updated in DOM");
       }
