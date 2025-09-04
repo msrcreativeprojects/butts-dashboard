@@ -834,16 +834,19 @@ body::before {
 }
 
 .submit-btn {
-  width: auto;
-  padding: 16px 32px;
-  font-size: 16px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   color: var(--text);
-  background: none;
-  border: 2px solid var(--text);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  opacity: 0.8;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   cursor: pointer;
   font-family: "Inter", -apple-system, system-ui, sans-serif;
   margin: 30px auto 0;
@@ -851,8 +854,9 @@ body::before {
 }
 
 .submit-btn:hover {
-  background: var(--text);
-  color: var(--blue);
+  opacity: 1;
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .btn-loading {
