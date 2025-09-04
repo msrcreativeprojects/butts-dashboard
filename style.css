@@ -942,6 +942,39 @@ body::before {
   opacity: 1;
 }
 
+.success-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+.back-button.primary {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  padding: 12px 24px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.back-button.primary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.back-button.secondary {
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  padding: 12px 24px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.back-button.secondary:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+}
+
 @media (max-width: 768px) {
   .waitlist-header {
     margin-bottom: 40px;

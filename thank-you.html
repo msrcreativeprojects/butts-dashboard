@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thank You - BUTTS IN SEATS</title>
+  
+  <!-- Four-pointed star favicon -->
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-theme="blue" class="waitlist-body">
+  <div id="loading-screen" class="loading-screen">
+    <div class="loading-star">✦</div>
+  </div>
+
+  <div id="waitlist-page">
+    <div class="main-screen">
+      <section class="data-section">
+        <div class="native-form-container">
+          <div class="form-header">
+            <h1 class="form-title">WELCOME TO<br>THE COUNT</h1>
+            <p class="form-description">
+              Thanks for joining the waitlist!<br>
+              We'll be in touch when we launch user submissions.
+            </p>
+            
+            <div class="success-actions">
+              <a href="/" class="back-button primary">← Back to Dashboard</a>
+              <a href="https://fourthwall.news" target="_blank" rel="noopener noreferrer" class="back-button secondary">Visit Fourth Wall</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="metadata">
+      <div class="fourth-wall-attribution" style="opacity: 0.8;">
+        A <a href="http://fourthwall.news" target="_blank" rel="noopener noreferrer"><strong>Fourth Wall</strong></a> Project
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    class ThankYouPage {
+      constructor() {
+        this.init();
+      }
+
+      async init() {
+        this.hideLoadingScreen();
+      }
+
+      hideLoadingScreen() {
+        const loadingScreen = document.getElementById('loading-screen');
+        setTimeout(() => {
+          loadingScreen.classList.add('hidden');
+          setTimeout(() => {
+            loadingScreen.remove();
+          }, 500);
+        }, 800);
+      }
+    }
+
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      new ThankYouPage();
+    });
+  </script>
+</body>
+</html>
