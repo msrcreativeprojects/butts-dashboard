@@ -768,6 +768,10 @@ body::before {
   margin-bottom: 25px;
 }
 
+.thank-you-header {
+  text-align: center;
+}
+
 .form-title {
   font-size: clamp(28px, 6vw, 50px);
   font-weight: 900;
