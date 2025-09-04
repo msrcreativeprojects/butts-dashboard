@@ -16,8 +16,11 @@ exports.handler = async (event, context) => {
     console.log('Event body:', event.body);
     console.log('Environment vars check:', {
       hasToken: !!process.env.AIRTABLE_API_TOKEN,
+      tokenPrefix: process.env.AIRTABLE_API_TOKEN?.substring(0, 10),
       hasBaseId: !!process.env.AIRTABLE_BASE_ID,
-      hasTableId: !!process.env.AIRTABLE_TABLE_ID
+      baseId: process.env.AIRTABLE_BASE_ID,
+      hasTableId: !!process.env.AIRTABLE_TABLE_ID,
+      tableId: process.env.AIRTABLE_TABLE_ID
     });
 
     // Parse the form data
