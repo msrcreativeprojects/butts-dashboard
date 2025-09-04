@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <style>
+    .background { 
+      fill: #0052cc; 
+    }
+    .star { 
+      fill: #ffffff; 
+      font-family: -apple-system, system-ui, sans-serif; 
+      font-size: 60px; 
+      text-anchor: middle; 
+      dominant-baseline: central;
+    }
+  </style>
+  <rect width="100" height="100" class="background"/>
+  <text x="50" y="50" class="star">✦</text>
+</svg>
