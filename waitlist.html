@@ -176,47 +176,21 @@
       setupShuffleTheme() {
         const shuffleButton = document.getElementById('shuffle-theme');
         shuffleButton.addEventListener('click', () => {
+          // Add spin animation
+          shuffleButton.classList.add('spinning');
+          
+          // Remove animation class after it completes
+          setTimeout(() => {
+            shuffleButton.classList.remove('spinning');
+          }, 400);
+          
           this.generateRandomTheme();
         });
       }
 
       async generateRandomTheme() {
-        try {
-          // Use bright, fun models that generate beautiful colors
-          const brightModels = ['flower_photography', 'sunset', 'ui', 'default'];
-          const randomModel = brightModels[Math.floor(Math.random() * brightModels.length)];
-          
-          // Fetch palette from Colormind API
-          const response = await fetch('http://colormind.io/api/', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              model: randomModel
-            })
-          });
-          
-          if (!response.ok) {
-            throw new Error('Failed to fetch palette');
-          }
-          
-          const data = await response.json();
-          const baseColor = data.result[0]; // Use first color as base
-          
-          // Generate shades from the base color
-          const mainColor = `rgb(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]})`;
-          const darkColor = this.darkenColor(baseColor, 0.8);
-          const darkerColor = this.darkenColor(baseColor, 0.6);
-          
-          // Apply random theme - text stays white
-          this.applyRandomTheme(mainColor, darkColor, darkerColor, '#ffffff');
-          
-        } catch (error) {
-          console.error('Failed to generate random theme:', error);
-          // Fallback to manual random colors
-          this.generateFallbackTheme();
-        }
+        // Generate diverse, appealing color directly without API dependency
+        this.generateDiverseTheme();
       }
 
       darkenColor(rgb, factor) {
@@ -249,17 +223,67 @@
         }, 300);
       }
 
-      generateFallbackTheme() {
-        // Fallback bright, fun colors if API fails
-        const hue = Math.floor(Math.random() * 360);
-        const saturation = 70 + Math.floor(Math.random() * 25); // 70-95% for vibrancy
-        const lightness = 45 + Math.floor(Math.random() * 15); // 45-60% for brightness
+      generateDiverseTheme() {
+        // Initialize or retrieve recent colors from session storage
+        if (!this.recentColors) {
+          this.recentColors = JSON.parse(sessionStorage.getItem('recentColors') || '[]');
+        }
         
-        const color1 = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-        const color2 = `hsl(${hue}, ${saturation}%, ${Math.max(lightness - 15, 25)}%)`;
-        const color3 = `hsl(${hue}, ${saturation}%, ${Math.max(lightness - 25, 15)}%)`;
+        let attempts = 0;
+        let newHue;
+        
+        // Try to find a hue that's different from recent colors
+        do {
+          newHue = Math.floor(Math.random() * 360);
+          attempts++;
+        } while (attempts < 20 && this.isTooSimilarToRecent(newHue));
+        
+        // Curated ranges for appealing colors
+        const saturationRanges = [
+          [65, 85],   // Vibrant but not overwhelming
+          [45, 65],   // Rich and sophisticated
+          [75, 90]    // Bold and energetic
+        ];
+        
+        const lightnessRanges = [
+          [35, 50],   // Deep and rich
+          [50, 65],   // Balanced and pleasant
+          [40, 55]    // Warm and inviting
+        ];
+        
+        // Randomly select ranges for variety
+        const satRange = saturationRanges[Math.floor(Math.random() * saturationRanges.length)];
+        const lightRange = lightnessRanges[Math.floor(Math.random() * lightnessRanges.length)];
+        
+        const saturation = satRange[0] + Math.random() * (satRange[1] - satRange[0]);
+        const lightness = lightRange[0] + Math.random() * (lightRange[1] - lightRange[0]);
+        
+        // Generate color variations
+        const color1 = `hsl(${newHue}, ${saturation}%, ${lightness}%)`;
+        const color2 = `hsl(${newHue}, ${Math.max(saturation - 10, 30)}%, ${Math.max(lightness - 12, 25)}%)`;
+        const color3 = `hsl(${newHue}, ${Math.max(saturation - 15, 25)}%, ${Math.max(lightness - 20, 20)}%)`;
+        
+        // Store this hue for future diversity checks
+        this.recentColors.push(newHue);
+        if (this.recentColors.length > 8) {
+          this.recentColors.shift(); // Keep only last 8 colors
+        }
+        sessionStorage.setItem('recentColors', JSON.stringify(this.recentColors));
         
         this.applyRandomTheme(color1, color2, color3, '#ffffff');
+      }
+      
+      isTooSimilarToRecent(newHue) {
+        if (!this.recentColors || this.recentColors.length === 0) return false;
+        
+        return this.recentColors.some(recentHue => {
+          // Calculate hue distance (accounting for circular nature of hue)
+          const distance = Math.min(
+            Math.abs(newHue - recentHue),
+            360 - Math.abs(newHue - recentHue)
+          );
+          return distance < 45; // Require at least 45° difference
+        });
       }
 
     }

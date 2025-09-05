@@ -66,6 +66,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  transition: background-color 0.6s ease, color 0.6s ease, border-color 0.6s ease;
 }
 
 .loading-screen {
@@ -366,6 +367,29 @@ body::before {
   background: rgba(255, 255, 255, 0.1);
 }
 
+.read-more-cta {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  opacity: 0.8;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.read-more-cta:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.1);
+}
+
 
 .footer-logo {
   display: flex;
@@ -399,6 +423,29 @@ body::before {
   }
 }
 
+@keyframes fadeUpIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 0.7;
+    transform: translateY(0);
+  }
+}
+
+@keyframes happyPop {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.25) rotate(180deg);
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+  }
+}
+
 .theme-selector {
   position: fixed;
   top: 20px;
@@ -406,9 +453,11 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  opacity: 0.7;
+  opacity: 0;
+  transform: translateY(20px);
   transition: opacity 0.3s ease;
   z-index: 100;
+  animation: fadeUpIn 0.8s ease-out 0.3s forwards;
 }
 
 .theme-selector:hover {
@@ -495,6 +544,10 @@ body::before {
   transform: scale(1.1);
   border-color: rgba(255, 255, 255, 0.8);
   background: rgba(255, 255, 255, 0.2);
+}
+
+.shuffle-button.spinning {
+  animation: happyPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 .share-button {
@@ -653,6 +706,36 @@ body::before {
   will-change: transform, opacity;
 }
 
+/* Desktop: Hide mobile READ MORE button */
+.read-more-mobile {
+  display: none;
+}
+
+/* Responsive breakpoints for CTA buttons */
+@media (max-width: 480px) {
+  /* Mobile: Show mobile READ MORE, hide desktop READ MORE */
+  .read-more-mobile {
+    display: block;
+  }
+  
+  .read-more-desktop {
+    display: none;
+  }
+  
+  /* Mobile: Stack buttons vertically and make them full-width */
+  .footer-left {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .waitlist-cta,
+  .read-more-mobile {
+    width: 100%;
+    text-align: center;
+  }
+}
+
 @media (max-width: 768px) {
   .metadata {
     flex-direction: column;
@@ -668,10 +751,29 @@ body::before {
     justify-content: center;
   }
   
-  /* Mobile: Left-align CTA under color picker */
+  /* Mobile: Show mobile READ MORE, hide desktop READ MORE */
+  .read-more-mobile {
+    display: inline-block;
+  }
+  
+  .read-more-desktop {
+    display: none;
+  }
+  
+  /* Mobile: Position CTAs side by side under color picker */
   .footer-left {
-    justify-content: flex-start;
+    justify-content: space-between;
     margin-top: 12px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .footer-right {
+    display: none; /* Hide footer-right on mobile since button moved to footer-left */
+  }
+  
+  .footer-center {
+    display: none; /* Hide Fourth Wall attribution on mobile */
   }
   
   .waitlist-cta {
@@ -679,15 +781,21 @@ body::before {
     padding: 12px 24px;
   }
   
+  .read-more-cta {
+    font-size: 18px;
+    padding: 12px 24px;
+  }
+  
+  
   /* Mobile: Larger touch targets for theme options */
   .theme-option {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
   }
   
   .shuffle-button {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     font-size: 24px;
   }
   
@@ -699,7 +807,7 @@ body::before {
   .share-button {
     display: flex;
     position: absolute;
-    top: 20px;
+    top: clamp(20px, 5vw, 40px);
     right: clamp(20px, 5vw, 40px);
     bottom: auto;
     width: 48px;
