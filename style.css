@@ -1139,7 +1139,7 @@ body::before {
   .waitlist-body .footer-center {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: baseline;
   }
   
   .waitlist-body .footer-center .waitlist-cta {
@@ -1173,7 +1173,7 @@ body::before {
   .waitlist-body .footer-center {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: baseline;
   }
   
   .waitlist-body .footer-center .waitlist-cta {
