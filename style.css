@@ -1137,6 +1137,15 @@ body::before {
     width: 100%;
     min-width: auto;
   }
+  
+  /* Center "Back to Butts" button on mobile for waitlist page */
+  .waitlist-body .metadata {
+    text-align: center;
+  }
+  
+  .waitlist-body .footer-left {
+    justify-content: center;
+  }
 }
 
 .sr-only {
