@@ -1144,6 +1144,7 @@ body::before {
   
   .waitlist-body .footer-center .waitlist-cta {
     display: inline-block;
+    width: auto;
   }
   
   .waitlist-body .footer-right {
@@ -1177,6 +1178,7 @@ body::before {
   
   .waitlist-body .footer-center .waitlist-cta {
     display: inline-block;
+    width: auto;
   }
   
   .waitlist-body .footer-right {
