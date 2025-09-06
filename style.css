@@ -751,13 +751,17 @@ body::before {
     justify-content: center;
   }
   
-  /* Override for waitlist page - center the button within footer-left */
+  /* Override for waitlist page - center the button within footer-left and move up */
   .waitlist-body .footer-left {
     justify-content: center !important;
   }
   
   .waitlist-body .footer-right {
     display: none !important;
+  }
+  
+  .waitlist-body .metadata {
+    padding: 40px clamp(20px, 5vw, 40px) 40px !important;
   }
   
   /* Mobile: Show mobile READ MORE, hide desktop READ MORE */
