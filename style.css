@@ -751,20 +751,9 @@ body::before {
     justify-content: center;
   }
   
-  /* Override for waitlist page - hide left, show center */
+  /* Override for waitlist page - center the button within footer-left */
   .waitlist-body .footer-left {
-    display: none !important;
-  }
-  
-  .waitlist-body .footer-center {
-    display: flex !important;
     justify-content: center !important;
-    align-items: baseline !important;
-  }
-  
-  .waitlist-body .footer-center .waitlist-cta {
-    display: inline-block !important;
-    width: auto !important;
   }
   
   .waitlist-body .footer-right {
@@ -1152,12 +1141,6 @@ body::before {
   }
 }
 
-/* Desktop: Hide centered button, show left button for waitlist */
-@media (min-width: 769px) {
-  .waitlist-body .footer-center .waitlist-cta {
-    display: none;
-  }
-}
 
 @media (max-width: 480px) {
   .submit-btn {
@@ -1165,25 +1148,6 @@ body::before {
     min-width: auto;
   }
   
-  /* Center "Back to Butts" button on mobile for waitlist page */
-  .waitlist-body .footer-left {
-    display: none;
-  }
-  
-  .waitlist-body .footer-center {
-    display: flex;
-    justify-content: center;
-    align-items: baseline;
-  }
-  
-  .waitlist-body .footer-center .waitlist-cta {
-    display: inline-block;
-    width: auto;
-  }
-  
-  .waitlist-body .footer-right {
-    display: none;
-  }
 }
 
 .sr-only {
