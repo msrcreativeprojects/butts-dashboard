@@ -1152,8 +1152,10 @@ body::before {
 }
 
 /* Desktop: Hide centered button, show left button for waitlist */
-.waitlist-body .footer-center .waitlist-cta {
-  display: none;
+@media (min-width: 769px) {
+  .waitlist-body .footer-center .waitlist-cta {
+    display: none;
+  }
 }
 
 @media (max-width: 480px) {
