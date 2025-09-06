@@ -1130,6 +1130,25 @@ body::before {
     min-width: 200px;
     max-width: 100%;
   }
+  
+  /* Center "Back to Butts" button at 768px for waitlist page */
+  .waitlist-body .footer-left {
+    display: none;
+  }
+  
+  .waitlist-body .footer-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .waitlist-body .footer-center .waitlist-cta {
+    display: inline-block;
+  }
+  
+  .waitlist-body .footer-right {
+    display: none;
+  }
 }
 
 /* Desktop: Hide centered button, show left button for waitlist */
