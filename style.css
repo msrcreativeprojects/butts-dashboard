@@ -751,6 +751,26 @@ body::before {
     justify-content: center;
   }
   
+  /* Override for waitlist page - hide left, show center */
+  .waitlist-body .footer-left {
+    display: none !important;
+  }
+  
+  .waitlist-body .footer-center {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: baseline !important;
+  }
+  
+  .waitlist-body .footer-center .waitlist-cta {
+    display: inline-block !important;
+    width: auto !important;
+  }
+  
+  .waitlist-body .footer-right {
+    display: none !important;
+  }
+  
   /* Mobile: Show mobile READ MORE, hide desktop READ MORE */
   .read-more-mobile {
     display: inline-block;
@@ -1129,26 +1149,6 @@ body::before {
     width: auto;
     min-width: 200px;
     max-width: 100%;
-  }
-  
-  /* Center "Back to Butts" button at 768px for waitlist page */
-  .waitlist-body .footer-left {
-    display: none;
-  }
-  
-  .waitlist-body .footer-center {
-    display: flex;
-    justify-content: center;
-    align-items: baseline;
-  }
-  
-  .waitlist-body .footer-center .waitlist-cta {
-    display: inline-block;
-    width: auto;
-  }
-  
-  .waitlist-body .footer-right {
-    display: none;
   }
 }
 
