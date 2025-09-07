@@ -73,14 +73,17 @@
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
   width: 100vw;
   height: 100vh;
   background: var(--blue);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
+  z-index: 10000;
   transition: opacity 0.5s ease, visibility 0.5s ease;
+  overflow: hidden;
 }
 
 .loading-screen.hidden {
@@ -93,14 +96,18 @@
   color: var(--text);
   opacity: 0.8;
   animation: spin 4s linear infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 @keyframes spin {
   from {
-    transform: rotate(0deg);
+    transform: translate(-50%, -50%) rotate(0deg);
   }
   to {
-    transform: rotate(360deg);
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
 
@@ -446,6 +453,18 @@ body::before {
   }
 }
 
+@keyframes happyPopMobile {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(180deg);
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+  }
+}
+
 .theme-selector {
   position: fixed;
   top: 20px;
@@ -761,7 +780,7 @@ body::before {
   }
   
   .waitlist-body .metadata {
-    padding: 40px clamp(20px, 5vw, 40px) 40px !important;
+    padding: 30px clamp(20px, 5vw, 40px) 40px !important;
   }
   
   /* Mobile: Show mobile READ MORE, hide desktop READ MORE */
@@ -810,6 +829,15 @@ body::before {
     width: 48px;
     height: 48px;
     font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    text-align: center;
+  }
+  
+  .shuffle-button.spinning {
+    animation: happyPopMobile 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
   
   .footer-logo {
@@ -1143,6 +1171,26 @@ body::before {
     min-width: 200px;
     max-width: 100%;
   }
+  
+  .waitlist-body .footer-left {
+    align-items: stretch !important;
+    justify-content: stretch !important;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+  
+  .waitlist-body .waitlist-cta {
+    width: auto;
+    min-width: 200px;
+    max-width: 100%;
+    font-size: 16px;
+    padding: 12px 24px;
+    display: block;
+    text-align: center;
+    margin: 10px 0 0 0;
+    flex: 1;
+  }
 }
 
 
@@ -1150,6 +1198,25 @@ body::before {
   .submit-btn {
     width: 100%;
     min-width: auto;
+  }
+  
+  .waitlist-body .footer-left {
+    align-items: stretch !important;
+    justify-content: stretch !important;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+  
+  .waitlist-body .waitlist-cta {
+    width: 100%;
+    min-width: auto;
+    font-size: 16px;
+    padding: 12px 24px;
+    display: block;
+    text-align: center;
+    margin: 10px 0 0 0;
+    flex: 1;
   }
   
 }
